@@ -12,7 +12,7 @@ from __init__ import Base,da_session,da_create_engine
 from __init__ import da_init_test as dainit
 
 class Package(Base):
-    __tablename__ = 'package_info'
+    __tablename__ = 'pkginfo'
     id = Column(Integer, primary_key=True)
     name = Column(String(256), nullable=False)
     version = Column(String(256))

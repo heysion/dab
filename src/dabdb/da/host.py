@@ -28,7 +28,7 @@ from users import Users
 class Host(Base):
     __tablename__ = 'hostinfo'
     id = Column(Integer, primary_key=True)
-    user_id = Column(String(256), ForeignKey('usersinfo.id'))
+    user_id = Column(Integer, ForeignKey('usersinfo.id'))
     name = Column(String(128))
     arches = Column(String(256))
     capacity = Column(Integer)
