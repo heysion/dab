@@ -6,24 +6,12 @@
 @copyright: 2016, Heysion Yuan <heysions@gmail.com>
 @license: GPLv3
 '''
-# CREATE TABLE host (
-# 	id SERIAL NOT NULL PRIMARY KEY,
-# 	user_id INbTEGER NOT NULL REFERENCES users (id),
-# 	name VARCHAR(128) UNIQUE NOT NULL,
-# 	arches TEXT,
-# 	task_load FLOAT CHECK (NOT task_load < 0) NOT NULL DEFAULT 0.0,
-# 	capacity FLOAT CHECK (capacity > 1) NOT NULL DEFAULT 2.0,
-# 	description TEXT,
-# 	comment TEXT,
-# 	ready BOOLEAN NOT NULL DEFAULT 'false',
-# 	enabled BOOLEAN NOT NULL DEFAULT 'true'
-# ) WITHOUT OIDS;
 
 from sqlalchemy import Column, ForeignKey, Integer, String
 
 from __init__ import Base,da_session,da_create_engine
 from __init__ import da_init_test as dainit
-from users import Users
+from users import User
 
 class Host(Base):
     __tablename__ = 'hostinfo'
@@ -36,8 +24,6 @@ class Host(Base):
     comment = Column(String(256))
     ready = Column(Integer)
     enabled = Column(Integer)
-
-
 
 def run_test():
     session = dainit(True)
