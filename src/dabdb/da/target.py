@@ -19,6 +19,7 @@ class Target(Base):
     suite = Column(String(32))
     codename = Column(String(32))
     architectures = Column(String(256))
+    workdir = Column(String(256))
     description = Column(String(256))
 
 
