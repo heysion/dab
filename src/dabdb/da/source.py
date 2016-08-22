@@ -21,7 +21,8 @@ class Source(Base):
     epoch = Column(Integer)
     release = Column(String(256))
     suite = Column(String(32))
-    dsc_file = Column(String(256))    
+    dsc_file = Column(String(256))
+    depends = Column(String(1024))
     workdir = Column(String(256))
     description = Column(String(256))
 
