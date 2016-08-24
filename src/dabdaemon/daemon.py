@@ -6,7 +6,7 @@
 @copyright: 2016, Heysion Yuan <heysions@gmail.com>
 @license: GPLv3
 '''
-
+import fcntl
 import atexit
 import os
 import sys
@@ -15,6 +15,7 @@ import signal
 import logging
 from logging import handlers
 
+import pdb
 class Daemon(object):
     """
     A generic daemon class.
@@ -44,11 +45,7 @@ class Daemon(object):
             sys.exit(1)
 
         os.chdir(self.home_dir)
-
-        pid = os.setsid()
-        if pid == -1:
-            sys.exit(1)
-
+        os.setsid()
         os.umask(self.umask)
 
         # Do second fork
@@ -61,8 +58,6 @@ class Daemon(object):
                 "fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
             sys.exit(1)
 
-        sys.stdout.flush()
-        sys.stderr.flush()
         devnull = "/dev/null"
         if hasattr(os, "devnull"):
             devnull = os.devnull
@@ -73,44 +68,42 @@ class Daemon(object):
         os.dup2(devnull_fd, 2)
         os.close(devnull_fd)
 
-        uid, gid = -1, -1
+        # uid, gid = -1, -1
+        # if self.group:
+        #     try:
+        #         gid = grp.getgrnam(self.group).gr_gid
+        #     except KeyError:
+        #         print("Group {0} not found".format(self.group))
+        #         sys.exit(1)
 
-        if self.group:
-            try:
-                gid = grp.getgrnam(self.group).gr_gid
-            except KeyError:
-                print("Group {0} not found".format(self.group))
-                sys.exit(1)
+        # if self.user:
+        #     try:
+        #         uid = pwd.getpwnam(self.user).pw_uid
+        #     except KeyError:
+        #         print("User {0} not found.".format(self.user))
+        #         sys.exit(1)
 
-        if self.user:
-            try:
-                uid = pwd.getpwnam(self.user).pw_uid
-            except KeyError:
-                print("User {0} not found.".format(self.user))
-                sys.exit(1)
+        # if uid != -1 or gid != -1:
+        #     os.chown(self.pid, uid, gid)
 
-        if uid != -1 or gid != -1:
-            os.chown(self.pid, uid, gid)
+        # if self.group:
+        #     try:
+        #         os.setgid(gid)
+        #     except OSError:
+        #         print("Unable to change gid.")
+        #         sys.exit(1)
 
-        if self.group:
-            try:
-                os.setgid(gid)
-            except OSError:
-                print("Unable to change gid.")
-                sys.exit(1)
-
-        if self.user:
-            try:
-                uid = pwd.getpwnam(self.user).pw_uid
-            except KeyError:
-                print("User {0} not found.".format(self.user))
-                sys.exit(1)
-            try:
-                os.setuid(uid)
-            except OSError:
-                print("Unable to change uid.")
-                sys.exit(1)
-
+        # if self.user:
+        #     try:
+        #         uid = pwd.getpwnam(self.user).pw_uid
+        #     except KeyError:
+        #         print("User {0} not found.".format(self.user))
+        #         sys.exit(1)
+        #     try:
+        #         os.setuid(uid)
+        #     except OSError:
+        #         print("Unable to change uid.")
+        #         sys.exit(1)
 
         def sigtermhandler(signum, frame):
             self.daemon_alive = False
@@ -133,19 +126,17 @@ class Daemon(object):
             self.logger = logging.getLogger(self.app)
             self.logger.setLevel(logging.DEBUG)
             self.logger.propagate = False
-            syslog_address = "/var/run/syslog"
-
-            if os.path.exists(syslog_address):
-                syslog = handlers.SysLogHandler(syslog_address)
-                if self.verbose:
-                    syslog.setLevel(logging.DEBUG)
-                else:
-                    syslog.setLevel(logging.INFO)
-                formatter = logging.Formatter("%(asctime)s %(name)s: %(message)s",
+            #local log handler
+            local_log = logging.FileHandler("/var/log/%s.log"%(self.app))
+            
+            if self.verbose:
+                local_log.setLevel(logging.DEBUG)
+            else:
+                local_log.setLevel(logging.INFO)
+            formatter = logging.Formatter("%(asctime)s %(name)s: %(message)s",
                                               "%b %e %H:%M:%S")
-                syslog.setFormatter(formatter)
-
-                self.logger.addHandler(syslog)
+            local_log.setFormatter(formatter)
+            self.logger.addHandler(local_log)
 
     def start(self, *args, **kwargs):
         """
@@ -218,7 +209,7 @@ class Daemon(object):
                 if os.path.exists(self.pidfile):
                     os.remove(self.pidfile)
             else:
-                self.logger.warn(err))
+                self.logger.warn(err)
                 sys.exit(1)
 
     def restart(self):
