@@ -39,7 +39,7 @@ class DaemonConfig():
         parser = OptionParser()
         parser.add_option("-c", "--config", dest="config",
                           help="use alternate configuration file", metavar="FILE",
-                          default="daemon.conf")
+                          default="/etc/dab/daemon.conf")
 
         parser.add_option("-p","--pid", dest="pidfile",
                           help="run pid file")
@@ -82,6 +82,7 @@ if __name__ == "__main__":
     test = DaemonConfig(opt.config)
     test.update_options(opt)
     print(test.options.__dict__)
+    print(test.options.workdir)
 
 # daemon_config = "cbsd.conf"
 # config = ConfigParser()
