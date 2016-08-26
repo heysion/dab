@@ -71,6 +71,8 @@ class DaemonConfig():
 
         parser.add_option("--topdir", help="Specify topdir")
         parser.add_option("--workdir", help="Specify workdir")
+        parser.add_option("--arches", help="Specify arches")
+
         (options, args) = parser.parse_args()
         return options
 
@@ -83,6 +85,7 @@ if __name__ == "__main__":
     test.update_options(opt)
     print(test.options.__dict__)
     print(test.options.workdir)
+    print(test.options.arches)
 
 # daemon_config = "cbsd.conf"
 # config = ConfigParser()
