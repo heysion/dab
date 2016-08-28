@@ -23,7 +23,7 @@ class App(Daemon):
             time.sleep(10)
 
 if __name__ == "__main__":
-    app = App(app="test",pid="/tmp/test.pid",foreground=False,verbose=True)
+    app = App(app="test",pid="/tmp/test.pid",foreground=True,verbose=True)
     #app = App(pidfile="/tmp/test.pid")
     if len(sys.argv) == 2:
         if 'start' == sys.argv[1]:
