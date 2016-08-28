@@ -1,0 +1,47 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+'''
+@date: 2016-08-25
+@author: Heysion Yuan
+@copyright: 2016, Heysion Yuan <heysions@gmail.com>
+@license: GPLv3
+'''
+import time
+import sys
+
+from daemon import Daemon
+from dabutil.config import DaemonConfig
+
+
+class AppMain(Daemon):
+    def run(self):
+        while True:
+            print("Howdy!  Gig'em!  Whoop!")
+            time.sleep(10)
+
+default_config = "../../etc/daemon.conf"
+
+if __name__ == "__main__":
+    opt = DaemonConfig.get_options()
+    print(opt.__dict__)
+    test = DaemonConfig(opt.config)
+    test.update_options(opt)
+    print(test.options.__dict__)
+    print(test.options.workdir)
+    print(test.options.arches)
+    app = AppMain(app="test",pid="/tmp/test.pid",foreground=True,verbose=True)
+    #app = App(pidfile="/tmp/test.pid")
+    if len(sys.argv) > 2:
+        if 'start' == sys.argv[1]:
+            app.start()
+        elif 'stop' == sys.argv[1]:
+            app.stop()
+        elif 'restart' == sys.argv[1]:
+            app.restart()
+        else:
+            print "Unknown command"
+            sys.exit(2)
+        sys.exit(0)
+    else:
+        print "usage: %s start|stop|restart" % sys.argv[0]
+        sys.exit(2)
