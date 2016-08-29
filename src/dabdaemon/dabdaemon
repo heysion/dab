@@ -8,9 +8,30 @@
 '''
 import time
 import sys
+import logging
+from logging import handlers
 
 from daemon import Daemon
 from dabutil.config import DaemonConfig
+
+import pdb
+
+def initlogger(options):
+    if not hasattr(options,"logger"):
+        options.logger = logging.getLogger(options.appname)
+    
+    options.logger.setLevel(logging.DEBUG)
+    options.logger.propagate = False
+    local_log = logging.FileHandler("%s"%(options.logfile))
+    
+    if options.verbose:
+        local_log.setLevel(logging.DEBUG)
+    else:
+        local_log.setLevel(logging.INFO)
+    formatter = logging.Formatter("%(asctime)s %(name)s: %(message)s",
+                                              "%b %e %H:%M:%S")
+    local_log.setFormatter(formatter)
+    options.logger.addHandler(local_log)
 
 
 class AppMain(Daemon):
@@ -23,15 +44,14 @@ default_config = "../../etc/daemon.conf"
 
 if __name__ == "__main__":
     opt = DaemonConfig.get_options()
-    print(opt.__dict__)
+    if opt.config == "/etc/dab/daemon.conf":
+        opt.config = default_config
     test = DaemonConfig(opt.config)
     test.update_options(opt)
+    initlogger(test.options)
     print(test.options.__dict__)
-    print(test.options.workdir)
-    print(test.options.arches)
-    app = AppMain(app="test",pid="/tmp/test.pid",foreground=True,verbose=True)
-    #app = App(pidfile="/tmp/test.pid")
-    if len(sys.argv) > 2:
+    app = AppMain(options=test.options)
+    if len(sys.argv) >= 2:
         if 'start' == sys.argv[1]:
             app.start()
         elif 'stop' == sys.argv[1]:
@@ -43,5 +63,5 @@ if __name__ == "__main__":
             sys.exit(2)
         sys.exit(0)
     else:
-        print "usage: %s start|stop|restart" % sys.argv[0]
+        print "usage: %s start|stop|restart other config" % sys.argv[0]
         sys.exit(2)

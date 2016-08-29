@@ -21,18 +21,30 @@ class Daemon(object):
     A generic daemon class.
     Usage: subclass the Daemon class and override the run() method
     """
-    def __init__(self, app, pid, user=None,
-                 group=None,home_dir='.', umask=022, 
-                 verbose=False,logger=None,foreground=False):
-        self.app = app
-        self.pidfile = pid
-        self.home_dir = home_dir
-        self.verbose = verbose
-        self.umask = umask
-        self.daemon_alive = True
-        self.logger = logger
-        self.foreground = foreground
-        
+    def __init__(self, app=None, pid=None, user=None,
+                 group=None,home_dir=None, umask=022, 
+                 verbose=False,logger=None,foreground=False,options=None):
+        if options is None:
+            self.app = app
+            self.pidfile = pid
+            self.home_dir = home_dir
+            self.verbose = verbose
+            self.umask = umask
+            self.daemon_alive = True
+            self.logger = logger
+            self.foreground = foreground
+        else:
+            self.app = options.appname
+            self.pidfile = options.pidfile
+            self.home_dir = options.workdir
+            self.verbose = options.verbose
+            self.umask = umask
+            self.daemon_alive = True
+            self.logger = options.logger
+            self.foreground = options.foreground
+
+        print(self.__dict__)
+
     def daemonize(self):
         #Do first Fork
         try:
@@ -162,8 +174,9 @@ class Daemon(object):
 
 
         # Start the daemon
-        if not self.foreground:
+        if not self.foreground :
             self.daemonize()
+
 
         # Flush pid in pidfile
         try:

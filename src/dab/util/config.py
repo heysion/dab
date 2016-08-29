@@ -13,6 +13,9 @@ from ConfigParser import ConfigParser
 from optparse import OptionParser
 from error import ConfigException
 
+def str2bool(r):
+    return r == "True"
+
 class DaemonConfig():
     def __init__(self,config="/etc/dab/daemon.conf"):
         if os.path.exists(config):
@@ -31,6 +34,11 @@ class DaemonConfig():
             if not getattr(self.options, key, None) :
                 setattr(self.options, key, value)
             pass
+        self.options.verbose = str2bool(self.options.verbose)
+        self.options.debug = str2bool(self.options.debug)
+
+        self.options.foreground = str2bool(self.options.foreground)
+        self.options.forcelock = str2bool(self.options.forcelock)
 
         pass
     @classmethod
