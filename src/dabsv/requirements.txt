@@ -2,4 +2,4 @@
 tornado
 #pyuv
 sqlalchemy
-#psycopg2
+psycopg2
