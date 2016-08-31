@@ -5,6 +5,8 @@ import tornado
 import tornado.httpserver
 import tornado.web
 import tornado.ioloop
+import psycopg2
+import psycopg2.pool
 
 from tornado.options import define ,options
 import urls as models
@@ -15,7 +17,8 @@ define("db_database", default = "db_name", help = "community database name")
 define("db_port", default = 5432, help = "db port", type = int)
 define("db_user", default = "db_user", help = "community database user")
 define("db_password", default = "db_password", help = "community database password")
-
+minconn=4
+maxconn=16
 class App(tornado.web.Application):
     def __init__(self):
         settings = dict(
@@ -27,7 +30,7 @@ class App(tornado.web.Application):
 #            (r"/",None),
         ]
         """host='localhost' dbname='my_database' user='postgres' password='secret'"""
-        #self._pool = psycopg2.pool.SimpleConnectionPool(minconn, maxconn,host="127.0.0.1",port=5432,password="qwe123",user="root",dbname="dabdb")
+        self._pool = psycopg2.pool.SimpleConnectionPool(minconn, maxconn,host="192.168.122.10",port=5432,password="qwe123",user="postgres",dbname="dabdb")
         handlers.extend(models.sub_handles)
         tornado.web.Application.__init__(self,handlers,**settings)
 
