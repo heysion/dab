@@ -12,7 +12,7 @@ import logging
 from logging import handlers
 
 from daemon import Daemon
-from dabutil.config import DaemonConfig
+from dab.util.config import DaemonConfig
 
 import pdb
 
