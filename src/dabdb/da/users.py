@@ -17,18 +17,18 @@ from __init__ import da_init_test as dainit
 class User(Base):
     __tablename__ = 'userinfo'
     id = Column(Integer, primary_key=True)
-    name = Column(String(128), nullable=False)
+    name = Column(String(128), nullable=False ,unique = True)
     password = Column(String(256),nullable=False)
     ssalt = Column(String(32))
     status = Column(Integer)
     usertype = Column(Integer)
-    host = relationship("Host",backref="userinfo",uselist=False)
+    #host = relationship("Host",backref="userinfo",uselist=False)
     __table_args__= (UniqueConstraint("name",name="username_o_1"),)
 
 
 def run_test():
     session = dainit(True)
-    new_obj = User(name="test")
+    new_obj = User(name="test",password="qwe123")
     session.add(new_obj)
     session.commit()
 

@@ -8,18 +8,21 @@
 '''
 
 from sqlalchemy import Column, ForeignKey, Integer, String ,DateTime ,Time , Boolean
+from sqlalchemy.orm import relationship
+from sqlalchemy import UniqueConstraint
 
 from __init__ import Base,da_session,da_create_engine
 from __init__ import da_init_test as dainit
 from users import User
 from channels import Channel
-from  host import Host
+from host import Host
 from source import Source
+from datetime import datetime
 
 class Task(Base):
     __tablename__ = 'taskinfo'
     id = Column(Integer, primary_key=True)
-    state = Column(Integer)
+    state = Column(Integer)# 0 init 100 submit 200 start 300 build 400 failed 500 success 
     create_time = Column(DateTime, nullable=False, default=datetime.now())
     start_time = Column(DateTime)
     completion_time = Column(DateTime)
@@ -33,6 +36,20 @@ class Task(Base):
     owner = Column(Integer,ForeignKey("userinfo.id"))
     arch = Column(String(32))
     priority = Column(Integer)
+    
+    user = relationship("User",backref="taskinfo")
+    channel = relationship("Channel",backref="taskinfo")
+    host = relationship("Host",backref="taskinfo")
+    source = relationship("Source",backref="taskinfo")
+    
+    def __init__(self,state=0,channel_id=None,host_id=None,src_id=None):
+        self.state = state
+        self.channel_id = channel_id
+        self.host_id = host_id
+        self.src_id = src_id
+        pass
+    def update_task_info(self):
+        pass
 
 def run_test():
     session = dainit(True)
