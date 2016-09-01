@@ -11,3 +11,6 @@ class ConfigException(Exception):
         self.msg = msg
     def __str__(self):
         return repr(self.msg)
+
+class DabdbException(ConfigException):
+    pass
