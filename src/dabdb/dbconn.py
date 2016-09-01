@@ -47,17 +47,30 @@ def dbinit(dbtype="postgre",dbsetting=DATABASE):
 
 import pdb
 
+from da.users import User
+from da.host import Host
+import da
+    
+def test_fill_data(session,e):
+    User.metadata.create_all(e)
+    Host.metadata.create_all(e)
+    new_obj = User(name="test2",password="qwe123")
+    new_obj.host=Host(name="host3")
+    session.add(new_obj)
+    session.flush()
+    print(new_obj.host.__dict__)
+    # new_host = Host(name="host2",user_id=new_obj.id)
+    # session.add(new_host)
+    session.commit()
+    
+
 if __name__ == "__main__":
     dbase = dbinit()
     e = dbase.getconn()
-    import da
-    from da.users import User
-    User.metadata.create_all(e)
     DBSession = da.da_session(bind=e)
-    sesion = DBSession()
-    new_obj = User(name="test")
-    sesion.add(new_obj)
-    sesion.commit()
+    session = DBSession()
+    #test_fill_data(session,e)
+    h,u = session.query(Host,User).filter(Host.user_id==User.id).first()
+    print(h.__dict__)
+    print(u.__dict__)
     print(dbase)
-    print(sesion.__dict__)
-    pdb.set_trace()

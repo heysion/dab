@@ -20,7 +20,7 @@ class Task(Base):
     __tablename__ = 'taskinfo'
     id = Column(Integer, primary_key=True)
     state = Column(Integer)
-    create_time = Column(DateTime)
+    create_time = Column(DateTime, nullable=False, default=datetime.now())
     start_time = Column(DateTime)
     completion_time = Column(DateTime)
     channel_id = Column(Integer,ForeignKey("channelinfo.id"))
