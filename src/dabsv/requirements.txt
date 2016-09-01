@@ -3,3 +3,4 @@ tornado
 #pyuv
 sqlalchemy
 psycopg2
+requests
