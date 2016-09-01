@@ -55,12 +55,12 @@ def test_fill_data(session,e):
     User.metadata.create_all(e)
     Host.metadata.create_all(e)
     new_obj = User(name="test2",password="qwe123")
-    new_obj.host=Host(name="host3")
     session.add(new_obj)
     session.flush()
-    print(new_obj.host.__dict__)
+    new_host = Host(name=new_obj.name)
+    new_host.user = new_obj
     # new_host = Host(name="host2",user_id=new_obj.id)
-    # session.add(new_host)
+    session.add(new_host)
     session.commit()
     
 
@@ -69,6 +69,17 @@ if __name__ == "__main__":
     e = dbase.getconn()
     DBSession = da.da_session(bind=e)
     session = DBSession()
+    #test_fill_data(session,e)
+    new_obj = User(name="test5",password="qwe123")
+    # session.add(new_obj)
+    # session.flush()
+    # session.commit()
+    new_host = Host(name=new_obj.name) 
+    new_host.user = new_obj
+    new_host.add_host(session)
+    session.commit()
+    #session.add(new_host)
+    #session.commit()
     #test_fill_data(session,e)
     h,u = session.query(Host,User).filter(Host.user_id==User.id).first()
     print(h.__dict__)
