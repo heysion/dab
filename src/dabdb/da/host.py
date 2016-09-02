@@ -7,7 +7,7 @@
 @license: GPLv3
 '''
 
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String ,Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy import UniqueConstraint
 
@@ -26,8 +26,8 @@ class Host(Base):
     capacity = Column(Integer)
     description = Column(String(256))
     comment = Column(String(256))
-    ready = Column(Integer)
-    enabled = Column(Integer)
+    ready = Column(Boolean)
+    enabled = Column(Boolean)
     __table_args__= (UniqueConstraint("name",name="hostname_o_1"),)
 
     def add_host(self,session):
