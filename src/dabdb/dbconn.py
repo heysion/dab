@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import *
 from sqlalchemy.engine.url import URL
+from sqlalchemy.orm import sessionmaker
 
 class SQLBase():
     def __init__(self,dbsetting):
@@ -38,14 +39,14 @@ DATABASE = {
 def dbinit(dbtype="postgres",dbsetting=DATABASE):
     if dbtype == "postgres":
         db = PgConn(dbsetting)
-        e = dbase.getconn()
-        DBSession = da.da_session(bind=e)
+        e = db.getconn()
+        DBSession = sessionmaker(bind=e)
         session = DBSession()
         return (db,session)
     elif dbtype == "sqlite3":
         db = SqliteConn(dbsetting)
-        e = dbase.getconn()
-        DBSession = da.da_session(bind=e)
+        e = db.getconn()
+        DBSession = sessionmaker(bind=e)
         session = DBSession()
         return (db,session)
     else:
