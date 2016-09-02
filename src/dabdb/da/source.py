@@ -15,8 +15,8 @@ from build import Build
 class Source(Base):
     __tablename__ = 'srcinfo'
     id = Column(Integer, primary_key=True)
-    build_id = Column(Integer, ForeignKey('buildinfo.id'))
-    target_id = Column(Integer, ForeignKey('targetinfo.id'))
+    build_name = Column(String(256), ForeignKey('buildinfo.name'))
+    target_name = Column(String(256), ForeignKey('targetinfo.name'))
     name = Column(String(256), nullable=False)
     version = Column(String(256), nullable=False)
     epoch = Column(Integer)

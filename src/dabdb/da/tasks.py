@@ -24,15 +24,15 @@ from build import Build
 class Task(Base):
     __tablename__ = 'taskinfo'
     id = Column(Integer, primary_key=True)
-    state = Column(Integer)
+    state = Column(Integer,default=0)
     # 0 init 100 submit 200 start 300 build 400 failed 500 success 
     create_time = Column(DateTime, nullable=False, default=datetime.now())
     start_time = Column(DateTime)
     completion_time = Column(DateTime)
-    channel_id = Column(Integer,ForeignKey("channelinfo.id"))
-    host_id = Column(Integer,ForeignKey("hostinfo.id"))
+    channel_name= Column(String(256),ForeignKey("channelinfo.name"))
+    host_name = Column(String(256),ForeignKey("hostinfo.name"))
     src_id = Column(Integer,ForeignKey("srcinfo.id"))
-    build_id = Column(Integer,ForeignKey("buildinfo.id"))
+    build_name = Column(String(256),ForeignKey("buildinfo.name"))
     parent = Column(Integer,nullable=True)
     label = Column(String(256))
     waiting = Column(Boolean)
@@ -47,15 +47,16 @@ class Task(Base):
     source = relationship("Source",backref="taskinfo")
     build = relationship("Build",backref="taskinfo")
     
-    def __init__(self,state=0,channel_id=None,host_id=None,src_id=None):
-        self.state = state
-        self.channel_id = channel_id
-        self.host_id = host_id
-        self.src_id = src_id
-        pass
+    # def __init__(self,state=0,channel_name=None,host_name=None,src_id=None,):
+    #     self.state = state
+    #     self.channel_name = channel_name
+    #     self.host_name = host_name
+    #     self.src_id = src_id
+
     @classmethod
-    def get_task_info_daemon(cls,session,channel_id,host_id):
-        task_list = session.query(Task).filter(Task.channel_id==channel_id,Task.host_id==host_id).all()
+    def get_task_info_daemon(cls,session,channel_name,host_name):
+        task_list = session.query(Task).filter(Task.channel_name==channel_name,
+                                               Task.host_name==host_name).all()
         return task_list
     def update_task_info(self):
         pass

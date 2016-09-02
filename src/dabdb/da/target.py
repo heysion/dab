@@ -15,8 +15,8 @@ from sqlalchemy import UniqueConstraint
 
 class Target(Base):
     __tablename__ = 'targetinfo'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(256), nullable=False)
+#    id = Column(Integer, primary_key=True)
+    name = Column(String(256), nullable=False,primary_key=True)
     suite = Column(String(32), nullable=False)
     codename = Column(String(32), nullable=False)
     architectures = Column(String(256))

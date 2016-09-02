@@ -18,9 +18,9 @@ from dab.util.error import DabdbException
 
 class Host(Base):
     __tablename__ = 'hostinfo'
-    id = Column(Integer, primary_key=True)
+#    id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('userinfo.id'))
-    name = Column(String(128), nullable=False, unique=True)
+    name = Column(String(128), nullable=False, primary_key=True, unique=True)
     user = relationship("User",backref="hostinfo")
     arches = Column(String(256))
     capacity = Column(Integer)

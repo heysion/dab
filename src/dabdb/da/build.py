@@ -16,9 +16,9 @@ from target import Target
 
 class Build(Base):
     __tablename__ = 'buildinfo'
-    id = Column(Integer, primary_key=True)
-    target_id = Column(Integer, ForeignKey('targetinfo.id'))
-    name = Column(String(256))
+#    id = Column(Integer, primary_key=True)
+    target_name = Column(String(256), ForeignKey('targetinfo.name'))
+    name = Column(String(256),primary_key=True)
     arches = Column(String(256))
     suite = Column(String(32))
     description = Column(String(256))

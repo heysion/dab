@@ -18,10 +18,10 @@ from target import Target
 
 class Channel(Base):
     __tablename__ = 'channelinfo'
-    id = Column(Integer, primary_key=True)
-    host_id = Column(Integer, ForeignKey('hostinfo.id'))
-    target_id = Column(Integer, ForeignKey('targetinfo.id'))
-    name = Column(String(128))
+#    id = Column(Integer, primary_key=True)
+    host_name = Column(String(256), ForeignKey('hostinfo.name'))
+    target_name = Column(String(256), ForeignKey('targetinfo.name'))
+    name = Column(String(256), primary_key=True, nullable=False)
     arches = Column(String(256))
     enabled = Column(Boolean)
     max_job = Column(Integer)
@@ -31,9 +31,9 @@ class Channel(Base):
     target = relationship("Target",backref="channelinfo")
 
     @classmethod
-    def update_channel_info(cls,session,channel_id,host_id,max_job,curr_job,state):
-        channelinfo = session.query(Channel).filter(Channel.id==channel_id,
-                                                    Channel.host_id==host_id).first()
+    def update_channel_info(cls,session,channel_name,host_name,max_job,curr_job,state):
+        channelinfo = session.query(Channel).filter(Channel.name==channel_name,
+                                                    Channel.host_name==host_name).first()
         if channelinfo:
             channelinfo.max_job = max_job
             channel_id.curr_job = curr_job
