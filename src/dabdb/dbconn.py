@@ -35,13 +35,19 @@ DATABASE = {
     'database': 'dabdb'
 }
 
-def dbinit(dbtype="postgre",dbsetting=DATABASE):
-    if dbtype == "postgre":
+def dbinit(dbtype="postgres",dbsetting=DATABASE):
+    if dbtype == "postgres":
         db = PgConn(dbsetting)
-        return db
+        e = dbase.getconn()
+        DBSession = da.da_session(bind=e)
+        session = DBSession()
+        return (db,session)
     elif dbtype == "sqlite3":
         db = SqliteConn(dbsetting)
-        return db
+        e = dbase.getconn()
+        DBSession = da.da_session(bind=e)
+        session = DBSession()
+        return (db,session)
     else:
         return None
 

@@ -48,6 +48,10 @@ class Task(Base):
         self.host_id = host_id
         self.src_id = src_id
         pass
+    @classmethod
+    def get_task_info_daemon(cls,session,channel_id,host_id):
+        task_list = session.query(Task).filter(Task.channel_id==channel_id,Task.host_id==host_id).all()
+        return task_list
     def update_task_info(self):
         pass
 
