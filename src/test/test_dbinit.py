@@ -42,7 +42,7 @@ def test_fill_data_channel(session,e):
     Channel.metadata.create_all(e)
     target = session.query(Target).filter(Target.name=="deepinmips64el").first()
     host = session.query(Host).filter(Host.name=="dptest").first()
-    new_obj = Channel(host_id=host.id,target_id=target.id,
+    new_obj = Channel(host_name=host.name,target_name=target.name,
                       arches="mips64el",enabled=True,
                       max_job=10,curr_job=0,
                       name=host.name)
@@ -58,7 +58,7 @@ def test_fill_base_data(session,e):
 def test_add_build(session,e):
     Build.metadata.create_all(e)
     target = session.query(Target).filter(Target.name=="deepinmips64el").first()
-    new_obj = Build(target_id=target.id,name="mbr",
+    new_obj = Build(target_name=target.name,name="mbr",
                     arches="mips64el",enabled=True)
     session.add(new_obj)
     session.commit()
@@ -67,7 +67,7 @@ def test_add_source(session,e):
     Source.metadata.create_all(e)
     build = session.query(Build).filter(Build.name=="mbr").first()
     print(build.__dict__)
-    new_obj = Source(build_id=build.id, target_id=build.target_id,
+    new_obj = Source(build_name=build.name, target_name=build.target_name,
                      name="mbr", version="1.1.11-5",
                      dsc_file="mbr_1.1.11-5.dsc")
     session.add(new_obj)
@@ -82,13 +82,16 @@ def test_add_task(session,e):
     srcinfo = session.query(Source).filter(Source.name=="mbr",
                                            Source.version=="1.1.11-5").first()
     buildinfo = session.query(Build).filter(Build.name=="mbr",
-                                            Build.target_id==srcinfo.target_id).first()
-    channelinfo = session.query(Channel).filter(Channel.target_id==srcinfo.target_id,
+                                            Build.target_name==srcinfo.target_name).first()
+    channelinfo = session.query(Channel).filter(Channel.target_name==srcinfo.target_name,
                                                 Channel.arches==buildinfo.arches).order_by(desc(Channel.curr_job)).first()
     print(channelinfo.__dict__)
     print(srcinfo.__dict__)
     print(buildinfo.__dict__)
-    new_obj = Task(channel_id=channelinfo.id,host_id=channelinfo.host_id,src_id=srcinfo.id)
+    new_obj = Task(host_name=channelinfo.host_name)
+    new_obj.channel = channelinfo
+    new_obj.build = buildinfo
+    new_obj.source = srcinfo
     session.add(new_obj)
     session.commit()
     pass
@@ -96,6 +99,7 @@ def test_add_task(session,e):
 if __name__ == "__main__":
     dbase,session = dbinit()
     e = dbase.getconn()
+#    test_fill_base_data(session,e)
+#    test_data_init(session,e)
     test_add_task(session,e)
-    #test_data_init(session,e)
     
