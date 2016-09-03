@@ -11,7 +11,7 @@ class BufferLoading:
     no_buffer = True
 
     def has_noerror(self):
-        if self.no_error == True and self.no_buffer == False:
+        if (self.no_error ) and (not self.no_buffer ) :
             return True
         else:
             return False
