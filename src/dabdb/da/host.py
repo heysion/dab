@@ -31,9 +31,9 @@ class Host(Base):
     __table_args__= (UniqueConstraint("name",name="hostname_o_1"),)
 
     def add_host(self,session):
-        if self.user == None:
+        if self.user is None:
             u = session.query(User).filter(User.name==self.name).first()
-            if u == None:
+            if u is None:
                 raise DabdbException("not found user name")
         session.add(self)
         session.flush()
