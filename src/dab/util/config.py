@@ -11,7 +11,7 @@ import os.path
 import pdb
 from ConfigParser import ConfigParser
 from optparse import OptionParser
-from error import ConfigException
+from error import ConfigError
 
 def str2bool(r):
     return r == "True"
@@ -21,11 +21,11 @@ class DaemonConfig():
         if os.path.exists(config):
             self.config = config
         else:
-            raise ConfigException("not found config %s"%(config))
+            raise ConfigError("not found config %s"%(config))
         self.confp = ConfigParser()
         self.confp.read(self.config)
         if not self.confp.has_section("daemon"):
-            raise ConfigException("not found daemon section")
+            raise ConfigError("not found daemon section")
 
     def update_options(self,options):
         if not hasattr(self,"options"):

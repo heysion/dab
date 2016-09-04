@@ -14,7 +14,7 @@ from sqlalchemy import UniqueConstraint
 from __init__ import Base,da_session,da_create_engine
 from __init__ import da_init_test as dainit
 from users import User
-from dab.util.error import DabdbException
+from dab.util.error import DabdbError
 
 class Host(Base):
     __tablename__ = 'hostinfo'
@@ -34,7 +34,7 @@ class Host(Base):
         if self.user is None:
             u = session.query(User).filter(User.name==self.name).first()
             if u is None:
-                raise DabdbException("not found user name")
+                raise DabdbError("not found user name")
         session.add(self)
         session.flush()
         pass
