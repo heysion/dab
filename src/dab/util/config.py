@@ -31,7 +31,7 @@ class DaemonConfig():
         if not hasattr(self,"options"):
             self.options = options
         for key ,value in self.confp.items("daemon"):
-            if not getattr(self.options, key, None) :
+            if not getattr(self.options, key, None):
                 setattr(self.options, key, value)
             pass
         self.options.verbose = str2bool(self.options.verbose)
