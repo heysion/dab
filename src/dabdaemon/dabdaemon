@@ -13,6 +13,7 @@ from logging import handlers
 
 from daemon import Daemon
 from dab.util.config import DaemonConfig
+from dab.api.daemon import HttpDaemonApi
 
 import pdb
 
@@ -35,9 +36,11 @@ def initlogger(options):
 
 
 class AppMain(Daemon):
-    def run(self):
+    def run(self,daemonconfig):
+        taskapi = HttpDaemonApi(daemonconfig)
         while True:
             print("Howdy!  Gig'em!  Whoop!")
+            taskapi.daemon_fetch_task_list(channelname="dptest")
             time.sleep(10)
 
 default_config = "../../etc/daemon.conf"
@@ -53,7 +56,7 @@ if __name__ == "__main__":
     app = AppMain(options=test.options)
     if len(sys.argv) >= 2:
         if 'start' == sys.argv[1]:
-            app.start()
+            app.start(test)
         elif 'stop' == sys.argv[1]:
             app.stop()
         elif 'restart' == sys.argv[1]:

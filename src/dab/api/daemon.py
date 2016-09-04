@@ -9,6 +9,7 @@
 import requests
 
 from dab.util.error import ConfigError
+from dab.util import HttpRetPact
 import json
 
 class HttpDaemonApi:
