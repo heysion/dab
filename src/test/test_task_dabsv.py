@@ -9,7 +9,7 @@
 import requests
 import json
 
-def test_task_get():
+def test_taskinfo_get_list_daemoncli():
     url = 'http://127.0.0.1:8080/task'
     values = {'username': 'trusty',
               'password': 'qwe123',
@@ -20,4 +20,4 @@ def test_task_get():
     print response.content
 
 if __name__ == "__main__":
-    test_task_get()
+    test_taskinfo_get_list_daemoncli()

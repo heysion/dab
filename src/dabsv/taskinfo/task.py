@@ -26,7 +26,7 @@ class TaskHandler(HandlerBase):
         k = ['taskid','state','createtime',
              'buildname','srcname','srcversion',
              'srcdsc_file']
-        task_data = taskinfo.task_get(self.session,self.channelname,self.hostname)
+        task_data = taskinfo.get_list_daemoncli(self.session,self.channelname,self.hostname)
         ret_data = []
         for v in task_data:
             ret_data.append(dict(zip(k,v)))
