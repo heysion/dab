@@ -6,11 +6,12 @@
 @copyright: 2016, Heysion Yuan <heysions@gmail.com>
 @license: GPLv3
 '''
-class ConfigException(Exception):
+class ConfigError(Exception):
     def __init__(self, msg):
         self.msg = msg
     def __str__(self):
         return repr(self.msg)
 
-class DabdbException(ConfigException):
+class DabdbError(ConfigError):
     pass
+
