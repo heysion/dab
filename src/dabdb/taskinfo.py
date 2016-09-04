@@ -13,9 +13,16 @@ from sqlalchemy.sql import text
 
 import pdb
 
-def task_get(session,channelname,hostname):
-    sqlt = {"channelname":"dptest","hostname":"dptest"}
-    sqlcmd = """select taskinfo.id,state,to_char(create_time,'MM-DD-YYYY HH24:MI:SS'),taskinfo.build_name,srcinfo.name,srcinfo.version,srcinfo.dsc_file from taskinfo join srcinfo on srcinfo.id = taskinfo.src_id where taskinfo.channel_name='%s' and taskinfo.host_name='%s'"""%(channelname,hostname)
+def get_list_daemoncli(session,channelname,hostname):
+    """ get task  """
+    #sqlt = {"channelname":"dptest","hostname":"dptest"}
+    sqlcmd = """select taskinfo.id,state,
+    to_char(create_time,'MM-DD-YYYY HH24:MI:SS'),taskinfo.build_name,
+    srcinfo.name,srcinfo.version,srcinfo.dsc_file 
+    from taskinfo join srcinfo on srcinfo.id = taskinfo.src_id  
+    where taskinfo.channel_name='%s' and taskinfo.host_name='%s'"""%(channelname,
+                                                                     hostname)
+
     dbfetch = session.execute(sqlcmd)
     dataset = dbfetch.fetchall()
     return dataset
