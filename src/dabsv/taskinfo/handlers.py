@@ -3,7 +3,7 @@
 
 import tornado.web
 import pdb
-from task import TaskHandler
+from task import TaskHandler,TaskUpdateHandler
 
 
 handlers = [

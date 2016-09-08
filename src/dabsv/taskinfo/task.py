@@ -37,3 +37,10 @@ class TaskHandler(HandlerBase):
     def post(self):
         self.write("hello post")
         pass
+
+class TaskUpdateHandler(HandlerBase):
+    def get(self,taskid):
+        self.write(self.ret_404_msg("404 error"))
+
+    def post(self,taskid):
+        pass
