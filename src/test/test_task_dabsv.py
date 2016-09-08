@@ -19,5 +19,19 @@ def test_taskinfo_get_list_daemoncli():
     response = requests.get(url,data=json.dumps(values))
     print response.content
 
+def test_task_update_list_daemoncli():
+    url = 'http://127.0.0.1:8080/task/1/update'
+    values = {'username': 'trusty',
+              'password': 'qwe123',
+              'channelname': 'dptest',
+              'hostname':'dptest',
+              'state':100,
+              'taskid':1}
+
+    response = requests.post(url,data=json.dumps(values))
+    print response.content
+
 if __name__ == "__main__":
-    test_taskinfo_get_list_daemoncli()
+    # test_taskinfo_get_list_daemoncli()
+    test_task_update_list_daemoncli()
+

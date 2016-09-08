@@ -38,9 +38,34 @@ class TaskHandler(HandlerBase):
         self.write("hello post")
         pass
 
+
 class TaskUpdateHandler(HandlerBase):
     def get(self,taskid):
         self.write(self.ret_404_msg("404 error"))
 
     def post(self,taskid):
+        """
+        request={channelname,hostname,taskid,state,starttime,completiontime}
+        """
+        self.http_buffer_loading()
+        if not (hasattr(self,"channelname") and hasattr(self,"hostname") and hasattr(self,"taskid")):
+            self.write(self.ret_404_msg("404 error"))
+            return
+
+        self.db,self.session = dbinit("postgres")
+        req_key = ['taskid','state','createtime',
+             'completiontime','starttime']
+        for k in req_key:
+            if not getattr(self, k, None):
+                setattr(self, k, None)
+        udate_rc = taskinfo.update_daemoncli(session=self.session,channelname=self.channelname,
+                                             hostname=self.hostname,state=self.state,
+                                             starttime=self.starttime,taskid=self.taskid,
+                                             completiontime=self.completiontime)
+        # task_data = taskinfo.get_list_daemoncli(self.session,self.channelname,self.hostname)
+        # ret_task_data = []
+        # for v in task_data:
+        #     ret_task_data.append(dict(zip(k,v)))
+        # ret_data = {'retcode':0,'retmsg':None,'list':ret_task_data}
+        # self.write(json.dumps(ret_data))
         pass
