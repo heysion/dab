@@ -48,20 +48,32 @@ class TaskUpdateHandler(HandlerBase):
         request={channelname,hostname,taskid,state,starttime,completiontime}
         """
         self.http_buffer_loading()
-        if not (hasattr(self,"channelname") and hasattr(self,"hostname") and hasattr(self,"taskid")):
+        if not (hasattr(self,"channelname") 
+                and hasattr(self,"hostname") 
+                and hasattr(self,"taskid") 
+                and hasattr(self,"state")):
             self.write(self.ret_404_msg("404 error"))
             return
 
         self.db,self.session = dbinit("postgres")
+
         req_key = ['taskid','state','createtime',
              'completiontime','starttime']
+
         for k in req_key:
             if not getattr(self, k, None):
                 setattr(self, k, None)
-        udate_rc = taskinfo.update_daemoncli(session=self.session,channelname=self.channelname,
-                                             hostname=self.hostname,state=self.state,
-                                             starttime=self.starttime,taskid=self.taskid,
-                                             completiontime=self.completiontime)
+        update_rc = taskinfo.update_daemoncli(session=self.session,
+                                             channelname=self.channelname,
+                                             hostname=self.hostname,
+                                             state=self.state,
+                                             taskid=self.taskid)
+        ret_data = {'retcode':0,'retmsg':None,'list':None}
+        if not update_rc:
+            ret_data['retcode']=1001
+            ret_data['retmsg']='db error or not found task'
+        self.write(json.dumps(ret_data))
+
         # task_data = taskinfo.get_list_daemoncli(self.session,self.channelname,self.hostname)
         # ret_task_data = []
         # for v in task_data:

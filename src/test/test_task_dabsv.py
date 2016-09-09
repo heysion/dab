@@ -26,7 +26,7 @@ def test_task_update_list_daemoncli():
               'channelname': 'dptest',
               'hostname':'dptest',
               'state':100,
-              'taskid':1}
+              'taskid':11}
 
     response = requests.post(url,data=json.dumps(values))
     print response.content
