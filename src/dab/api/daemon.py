@@ -29,13 +29,34 @@ class HttpDaemonApi:
         """
         daemon fetch task list
         """
+        api_url = self.options.server+"task"
         req_values = {'username':self.options.username,
                       'channelname':channelname,
                       'hostname':self.options.username}
-        response = requests.get(self.options.server,data=json.dumps(req_values))
+        response = requests.get(url=api_url,data=json.dumps(req_values))
         if response :
             print(response.content)
             http_ret_pact = HttpRetPact(response.content)
             print(http_ret_pact.__dict__)
-            pass
-        pass
+            return http_ret_pact
+        else:
+            return None
+
+    def daemon_update_task_state(self,channelname,loginkey=None,state,taskid):
+        """
+        daemon fetch task list
+        """
+        api_url = self.options.server+"task"
+        req_values = {'username':self.options.username,
+                      'channelname':channelname,
+                      'hostname':self.options.username,
+                      'state':state,
+                      'taskid':taskid}
+        response = requests.post(url=api_url,data=json.dumps(req_values))
+        if response :
+            print(response.content)
+            http_ret_pact = HttpRetPact(response.content)
+            print(http_ret_pact.__dict__)
+            return http_ret_pact
+        else:
+            return None
