@@ -31,7 +31,6 @@ class TaskHandler(HandlerBase):
         for v in task_data:
             ret_task_data.append(dict(zip(k,v)))
         ret_data = {'retcode':0,'retmsg':None,'list':ret_task_data}
-#        pdb.set_trace()
         self.write(json.dumps(ret_data))
         pass
     def post(self):

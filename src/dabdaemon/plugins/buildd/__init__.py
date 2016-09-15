@@ -12,6 +12,7 @@ import multiprocessing
 import os
 import time
 import signal
+import sys
 
 from dabdaemon.plugins import Plugin
 
@@ -68,11 +69,13 @@ class Main(Plugin):
                 time.sleep(5)
     
     def work_main(self):
-        #print("workmain: %d "%(os.getpid()))
+        print("workmain: %d "%(os.getpid()))
         for work in range(2):
             self.work_pool.apply_async(self.worker)
         self.work_pool.close()
-        self.work_pool.join()
+        self.work_pool.terminate()
+        #self.work_pool.join()
+
 
     def init(self):
         self.fetch_process = Process(target=self.fetch_task)
@@ -83,8 +86,10 @@ class Main(Plugin):
         self.init()
         self.fetch_process.start()
         self.work_process.start()
+
         self.fetch_process.join()
         self.work_process.join()
+
     pass
 
 if __name__ == "__main__":
