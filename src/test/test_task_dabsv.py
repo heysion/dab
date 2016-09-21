@@ -10,7 +10,7 @@ import requests
 import json
 
 def test_taskinfo_get_list_daemoncli():
-    url = 'http://127.0.0.1:8080/task'
+    url = 'http://127.0.0.1:8080/task/list'
     values = {'username': 'trusty',
               'password': 'qwe123',
               'channelname': 'dptest',
@@ -18,6 +18,17 @@ def test_taskinfo_get_list_daemoncli():
 
     response = requests.get(url,data=json.dumps(values))
     print response.content
+
+def test_taskinfo_get_top_daemoncli():
+    url = 'http://127.0.0.1:8080/task/top/3'
+    values = {'username': 'trusty',
+              'password': 'qwe123',
+              'channelname': 'dptest',
+              'hostname':'dptest'}
+
+    response = requests.get(url,data=json.dumps(values))
+    print response.content
+
 
 def test_task_update_list_daemoncli():
     url = 'http://127.0.0.1:8080/task/1/update'
@@ -33,5 +44,5 @@ def test_task_update_list_daemoncli():
 
 if __name__ == "__main__":
     # test_taskinfo_get_list_daemoncli()
-    test_task_update_list_daemoncli()
+    test_taskinfo_get_top_daemoncli()
 

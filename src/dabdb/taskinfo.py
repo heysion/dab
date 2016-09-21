@@ -37,7 +37,7 @@ def get_top_daemoncli(session,channelname,hostname,count=1):
     from taskinfo join srcinfo on srcinfo.id = taskinfo.src_id  
     where taskinfo.channel_name='%s' and taskinfo.host_name='%s' 
     and (state=0 or state=NULL) order by id asc limit %d """%(channelname,
-                                                                     hostname,count)
+                                                                     hostname,int(count))
 
     dbfetch = session.execute(sqlcmd)
     dataset = dbfetch.fetchall()
