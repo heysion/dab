@@ -42,6 +42,23 @@ class HttpDaemonApi:
         else:
             return None
 
+    def daemon_fetch_task_first(self,channelname,loginkey=None):
+        """
+        daemon fetch task list
+        """
+        api_url = self.options.server+"task/top/1"
+        req_values = {'username':self.options.username,
+                      'channelname':channelname,
+                      'hostname':self.options.username}
+        response = requests.get(url=api_url,data=json.dumps(req_values))
+        if response :
+            print(response.content)
+            http_ret_pact = HttpRetPact(response.content)
+            print(http_ret_pact.__dict__)
+            return http_ret_pact
+        else:
+            return None
+
     def daemon_update_task_state(self,channelname,state,taskid,loginkey=None):
         """
         daemon fetch task list
