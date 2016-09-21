@@ -23,7 +23,7 @@ class DabDaemon(Daemon):
         self.opt = DaemonConfig.get_options()
 
         #test config
-        self.opt.config = default_config
+        #self.opt.config = default_config
 
         self.daemon_config = DaemonConfig(self.opt.config)
         self.daemon_config.update_options(self.opt)
@@ -50,12 +50,13 @@ class DabDaemon(Daemon):
         
     def main(self):
         print(self.daemon_config.options.__dict__)
+        #pdb.set_trace()
         if len(sys.argv) >= 2:
-            if 'start' == sys.argv[1]:
+            if 'start' in sys.argv:
                 self.start(self.daemon_config)
-            elif 'stop' == sys.argv[1]:
+            elif 'stop' in sys.argv:
                 self.stop()
-            elif 'restart' == sys.argv[1]:
+            elif 'restart' in sys.argv:
                 self.restart()
             else:
                 print "Unknown command"

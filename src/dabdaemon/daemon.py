@@ -230,7 +230,7 @@ class Daemon(object):
         Restart the daemon
         """
         self.stop()
-        self.start()
+        self.start(self.daemon_config)
 
     def get_pid(self):
         try:

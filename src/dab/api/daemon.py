@@ -42,7 +42,7 @@ class HttpDaemonApi:
         else:
             return None
 
-    def daemon_update_task_state(self,channelname,loginkey=None,state,taskid):
+    def daemon_update_task_state(self,channelname,state,taskid,loginkey=None):
         """
         daemon fetch task list
         """
