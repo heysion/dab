@@ -210,7 +210,7 @@ class Daemon(object):
         # Try killing the daemon process
         try:
             i = 0
-            while 1:
+            while True:
                 os.kill(pid, signal.SIGTERM)
                 time.sleep(0.1)
                 i = i + 1
