@@ -52,7 +52,7 @@ class BuildDispatcher(DabDaemon):
             time.sleep(5)
         else:
             ret_task = self.taskapi.daemon_fetch_task_first(channelname="dptest")
-            if len(ret_task.list) == 1:
+            if ret_task and len(ret_task.list) == 1:
                 taskid = ret_task.list[0]['taskid']
                 dsc_file = ret_task.list[0]['srcdsc_file']
                 build_name = ret_task.list[0]['buildname']
@@ -67,8 +67,8 @@ class BuildDispatcher(DabDaemon):
                     proc = pyuv.Process(self.loopmain)
                     pp = proc.spawn(self.loopmain,args=proc_args,
                                     exit_callback=self.process_exit_cb,
-                                    env=proc_env,
-                                    stdio=[proc_logfile,proc_logfile,proc_logfile])
+                                    env=proc_env)
+                                    #stdio=[proc_logfile,proc_logfile,proc_logfile])
 
                     pp.taskid = taskid
 
