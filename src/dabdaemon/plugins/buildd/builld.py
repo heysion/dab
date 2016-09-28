@@ -18,24 +18,6 @@ import pyuv
 import os
 import sys
 
-
-# class BuildDispatcher(DabDaemon):
-#     def run(self,daemonconfig):
-#         taskapi = HttpDaemonApi(daemonconfig)
-#         while True:
-#             print("Howdy!  Gig'em!  Whoop!")
-#             ret_task = taskapi.daemon_fetch_task_first(channelname="dptest")
-#             if len(ret_task.list) == 1:
-#                 taskid = ret_task.list[0]['taskid']
-#                 src_file = ret_task.list[0]['srcdsc_file']
-#                 build_name = ret_task.list[0]['build_name']
-#                 pass
-#             else:
-#                 pass
-#             time.sleep(10)
-#         pass
-#     pass
-
 class BuildDispatcher(DabDaemon):
     loopmain = pyuv.Loop.default_loop()
     timermain = pyuv.Timer(loopmain)
@@ -45,7 +27,13 @@ class BuildDispatcher(DabDaemon):
         print(exit_status)
         if hasattr(proc,"taskid"):
             print("proc len: %d"%(self.tasklist.length()))
-            #tasklist.rm_taskinfo(int(proc.taskid))
+            if exit_status is 0 :
+                self.taskapi.daemon_update_taskinfo_success(taskid)
+                tasklist.rm_taskinfo(int(proc.taskid))
+            else:
+                self.taskapi.daemon_update_taskinfo_failed(taskid)
+        else:
+            print("error task info")
         pass
 
     def stop_timer(self,handler):
@@ -66,7 +54,7 @@ class BuildDispatcher(DabDaemon):
             ret_task = self.taskapi.daemon_fetch_task_first(channelname="dptest")
             if len(ret_task.list) == 1:
                 taskid = ret_task.list[0]['taskid']
-                src_file = ret_task.list[0]['srcdsc_file']
+                dsc_file = ret_task.list[0]['srcdsc_file']
                 build_name = ret_task.list[0]['buildname']
                 
                 if self.tasklist.set_taskinfo(taskid ,ret_task.list[0]) :
@@ -74,7 +62,8 @@ class BuildDispatcher(DabDaemon):
                     log_file = open("abc.log","a+")
 
                     proc_logfile = pyuv.StdIO(fd=log_file.fileno(),flags=pyuv.UV_INHERIT_FD)
-                    proc_args= ["bash","./tttt.sh","1"]
+                    proc_args= ["deepin-buildpkg","-d", "%s/%s"%(self.httpdatasv,dsc_file), "-p"]
+                    print(proc_args)
                     proc = pyuv.Process(self.loopmain)
                     pp = proc.spawn(self.loopmain,args=proc_args,
                                     exit_callback=self.process_exit_cb,
@@ -88,6 +77,9 @@ class BuildDispatcher(DabDaemon):
         self.again_timer(handler_timer)
 
     def run(self,daemonconfig):
+        print(daemonconfig)
+        print(daemonconfig.options)
+        self.httpdatasv = daemonconfig.options.topurl
         self.taskapi = HttpDaemonApi(daemonconfig)
 
         self.timermain.start(self.start_process,1,2)

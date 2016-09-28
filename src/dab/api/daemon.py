@@ -75,3 +75,37 @@ class HttpDaemonApi:
             return http_ret_pact
         else:
             return None
+
+    def daemon_update_taskinfo_success(self,channelname,taskid,state=500,loginkey=None):
+        """
+        daemon fetch task list
+        """
+        api_url = self.options.server+"task"
+        req_values = {'username':self.options.username,
+                      'channelname':channelname,
+                      'hostname':self.options.username,
+                      'state':state,
+                      'taskid':taskid}
+        response = requests.post(url=api_url,data=json.dumps(req_values))
+        if response :
+            http_ret_pact = HttpRetPact(response.content)
+            return http_ret_pact
+        else:
+            return None
+
+    def daemon_update_taskinfo_failed(self,channelname,taskid,state=400,loginkey=None):
+        """
+        daemon fetch task list
+        """
+        api_url = self.options.server+"task"
+        req_values = {'username':self.options.username,
+                      'channelname':channelname,
+                      'hostname':self.options.username,
+                      'state':state,
+                      'taskid':taskid}
+        response = requests.post(url=api_url,data=json.dumps(req_values))
+        if response :
+            http_ret_pact = HttpRetPact(response.content)
+            return http_ret_pact
+        else:
+            return None
