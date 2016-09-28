@@ -29,7 +29,7 @@ class HttpDaemonApi:
         """
         daemon fetch task list
         """
-        api_url = self.options.server+"task"
+        api_url = self.options.server+"/task"
         req_values = {'username':self.options.username,
                       'channelname':channelname,
                       'hostname':self.options.username}
@@ -46,7 +46,7 @@ class HttpDaemonApi:
         """
         daemon fetch task list
         """
-        api_url = self.options.server+"task/top/1"
+        api_url = self.options.server+"/task/top/1"
         req_values = {'username':self.options.username,
                       'channelname':channelname,
                       'hostname':self.options.username}
@@ -61,7 +61,7 @@ class HttpDaemonApi:
         """
         daemon fetch task list
         """
-        api_url = self.options.server+"task"
+        api_url = self.options.server+"/task/%s/update"%(taskid)
         req_values = {'username':self.options.username,
                       'channelname':channelname,
                       'hostname':self.options.username,
@@ -80,7 +80,7 @@ class HttpDaemonApi:
         """
         daemon fetch task list
         """
-        api_url = self.options.server+"task"
+        api_url = self.options.server+"/task/%s/update"%(taskid)
         req_values = {'username':self.options.username,
                       'channelname':channelname,
                       'hostname':self.options.username,
@@ -97,7 +97,7 @@ class HttpDaemonApi:
         """
         daemon fetch task list
         """
-        api_url = self.options.server+"task"
+        api_url = self.options.server+"/task/%s/update"%(taskid)
         req_values = {'username':self.options.username,
                       'channelname':channelname,
                       'hostname':self.options.username,
