@@ -25,7 +25,12 @@ class Task(Base):
     __tablename__ = 'taskinfo'
     id = Column(Integer, primary_key=True)
     state = Column(Integer,default=0)
-    # 0 init 100 submit 200 start 300 build 400 failed 500 success 
+    # 0 init 
+    # 100 submit 
+    # 200 start 
+    # 300 build 
+    # 400 failed 
+    # 500 success 
     create_time = Column(DateTime, nullable=False, default=datetime.now())
     start_time = Column(DateTime)
     completion_time = Column(DateTime)

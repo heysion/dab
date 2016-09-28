@@ -93,7 +93,7 @@ class HttpDaemonApi:
         else:
             return None
 
-    def daemon_update_taskinfo_build(self,channelname,taskid,state=400,loginkey=None):
+    def daemon_update_taskinfo_build(self,channelname,taskid,state=300,loginkey=None):
         """
         daemon fetch task list
         """
