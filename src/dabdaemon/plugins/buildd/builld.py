@@ -70,9 +70,12 @@ class BuildDispatcher(DabDaemon):
                                     env=proc_env,
                                     stdio=[proc_logfile,proc_logfile,proc_logfile])
                     pp.taskid = taskid
+                    self.taskapi.daemon_update_taskinfo_build(self.username,taskid)
                 else:
                     time.sleep(5)
                     print("same task")
+            else:
+                print("no task found")
         
         self.again_timer(handler_timer)
 
