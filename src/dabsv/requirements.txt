@@ -4,4 +4,4 @@ tornado
 sqlalchemy
 psycopg2
 requests
-yaml
+#yaml apt-get install python-yaml
