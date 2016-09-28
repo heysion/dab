@@ -4,3 +4,4 @@ tornado
 sqlalchemy
 psycopg2
 requests
+yaml
