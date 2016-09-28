@@ -4,13 +4,20 @@ from sqlalchemy import *
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import sessionmaker
 
-class SQLBase():
+class SQLBase(object):
+    def __new__(cls,*args,**kw):
+        if not hasattr(cls,'_instace'):
+            orig = super(SQLBase,cls)
+            cls._instace = orig.__new__(cls,*args,**kw)
+        return cls._instace
+
     def __init__(self,dbsetting):
-        self.conn = create_engine(URL(**dbsetting))
+        if not hasattr(self,"conn"):
+            SQLBase.conn = create_engine(URL(**dbsetting))
 
     def getconn(self):
         if hasattr(self,"conn"):
-            return self.conn
+            return SQLBase.conn
         else:
             return None
     pass

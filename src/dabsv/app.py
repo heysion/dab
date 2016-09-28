@@ -30,7 +30,7 @@ class App(tornado.web.Application):
 #            (r"/",None),
         ]
         """host='localhost' dbname='my_database' user='postgres' password='secret'"""
-        self._pool = psycopg2.pool.SimpleConnectionPool(minconn, maxconn,host="192.168.122.10",port=5432,password="qwe123",user="postgres",dbname="dabdb")
+        #self._pool = psycopg2.pool.SimpleConnectionPool(minconn, maxconn,host="192.168.122.10",port=5432,password="qwe123",user="postgres",dbname="dabdb")
         handlers.extend(models.sub_handles)
         tornado.web.Application.__init__(self,handlers,**settings)
 
