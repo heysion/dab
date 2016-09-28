@@ -29,7 +29,7 @@ class BuildDispatcher(DabDaemon):
             print("proc len: %d"%(self.tasklist.length()))
             if exit_status is 0 :
                 self.taskapi.daemon_update_taskinfo_success(self.username,int(proc.taskid))
-                tasklist.rm_taskinfo(int(proc.taskid))
+                self.tasklist.rm_taskinfo(int(proc.taskid))
             else:
                 self.taskapi.daemon_update_taskinfo_failed(self.username,int(proc.taskid))
         else:
