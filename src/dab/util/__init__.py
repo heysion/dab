@@ -22,7 +22,9 @@ class BufferLoading:
 
 class HttpRetPact:
     def __init__(self,httpbuffer):
+        print(httpbuffer)
         self.http_buffer = yaml.safe_load(httpbuffer)
+        print(self.http_buffer)
         for k,v in self.http_buffer.iteritems():
             if not getattr(self, k, None):
                 setattr(self, k, v)
