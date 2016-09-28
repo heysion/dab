@@ -28,10 +28,10 @@ class BuildDispatcher(DabDaemon):
         if hasattr(proc,"taskid"):
             print("proc len: %d"%(self.tasklist.length()))
             if exit_status is 0 :
-                self.taskapi.daemon_update_taskinfo_success(taskid)
+                self.taskapi.daemon_update_taskinfo_success(int(proc.taskid))
                 tasklist.rm_taskinfo(int(proc.taskid))
             else:
-                self.taskapi.daemon_update_taskinfo_failed(taskid)
+                self.taskapi.daemon_update_taskinfo_failed(int(taskid))
         else:
             print("error task info")
         pass
