@@ -52,9 +52,7 @@ class HttpDaemonApi:
                       'hostname':self.options.username}
         response = requests.get(url=api_url,data=json.dumps(req_values))
         if response :
-            print(response.content)
             http_ret_pact = HttpRetPact(response.content)
-            print(http_ret_pact.__dict__)
             return http_ret_pact
         else:
             return None
