@@ -31,7 +31,7 @@ class BuildDispatcher(DabDaemon):
                 self.taskapi.daemon_update_taskinfo_success(int(proc.taskid))
                 tasklist.rm_taskinfo(int(proc.taskid))
             else:
-                self.taskapi.daemon_update_taskinfo_failed(int(taskid))
+                self.taskapi.daemon_update_taskinfo_failed(int(proc.taskid))
         else:
             print("error task info")
         pass
@@ -77,8 +77,6 @@ class BuildDispatcher(DabDaemon):
         self.again_timer(handler_timer)
 
     def run(self,daemonconfig):
-        print(daemonconfig)
-        print(daemonconfig.options)
         self.httpdatasv = daemonconfig.options.topurl
         self.taskapi = HttpDaemonApi(daemonconfig)
 
