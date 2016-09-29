@@ -53,6 +53,7 @@ class HttpDaemonApi:
         response = requests.get(url=api_url,data=json.dumps(req_values))
         if response :
             http_ret_pact = HttpRetPact(response.content)
+            del response
             return http_ret_pact
         else:
             return None
