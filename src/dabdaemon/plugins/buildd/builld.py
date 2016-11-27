@@ -7,22 +7,31 @@
 @license: GPLv3
 '''
 import time
+import multiprocessing as mp
 
+from signal import signal, SIGINT, SIG_IGN, siginterrupt
 from dabdaemon import DabDaemon
 from dab.api.daemon import HttpDaemonApi
 from multiprocessing import Process
-from taskqueue import TaskQueue
 import pdb
 
-import pyuv
 import os
 import sys
 
+from utils import Counter
+
+proc_counter = Counter()
+
+def update_counter():
+    global proc_counter
+    proc_counter.increment()
+
+def reduce_counter():
+    global proc_counter
+    proc_counter.reduce()
+
+
 class BuildDispatcher(DabDaemon):
-    loopmain = pyuv.Loop.default_loop()
-    timermain = pyuv.Timer(loopmain)
-    tasklist = TaskQueue()
-        
     def process_exit_cb(self,proc,exit_status,term_signal):
         print(exit_status)
         if hasattr(proc,"taskid"):
@@ -36,60 +45,110 @@ class BuildDispatcher(DabDaemon):
             print("error task info")
         pass
 
-    def stop_timer(self,handler):
-        handler.stop()
-
-    def again_timer(self,handler):
-        handler.again()
-
-    def run_sleep(self,tp):
-        time.sleep(tp)
-
-    def start_process(self,handler_timer):
-        self.stop_timer(handler_timer)
-        if self.tasklist.length() > 3:
-            print("get task")
-            time.sleep(5)
+    def task_worker(self,cntl_q, data_q, task_q):
+        taskinfo = data_q.get()
+        if taskinfo is not None:
+            proc_cmd= ["deepin-buildpkg","-d", "%s/%s"%(self.httpdatasv,taskinfo["dscfile"]), "-p"]
+            ret = subprocess.call(proc_cmd)
+            pass
         else:
-            ret_task = self.taskapi.daemon_fetch_task_first(channelname="dptest")
-            if ret_task and len(ret_task.list) == 1:
-                taskid = ret_task.list[0]['taskid']
-                dsc_file = ret_task.list[0]['srcdsc_file']
-                build_name = ret_task.list[0]['buildname']
-                
-                if self.tasklist.set_taskinfo(taskid ,ret_task.list[0]) :
-                    proc_env  = os.environ.copy()
-                    log_file = open("abc.log","a+")
+            return None
+        taskid = 1
+        task_q.put({"event":'updatetask','taskid':taskid})
+        cntl_q.put({'event': 'exit', 'pid': os.getpid()})
+        pass
 
-                    proc_logfile = pyuv.StdIO(fd=log_file.fileno(),flags=pyuv.UV_INHERIT_FD)
-                    proc_args= ["deepin-buildpkg","-d", "%s/%s"%(self.httpdatasv,dsc_file), "-p"]
-                    print(proc_args)
-                    proc = pyuv.Process(self.loopmain)
-                    pp = proc.spawn(self.loopmain,args=proc_args,
-                                    exit_callback=self.process_exit_cb,
-                                    env=proc_env)
-                                    #stdio=[proc_logfile,proc_logfile,proc_logfile])
+    def fetch_task_api(self):
+        ret_task = self.taskapi.daemon_fetch_task_first(channelname="dptest")
+        if ret_task and len(ret_task.list) == 1:
+            taskid = ret_task.list[0]['taskid']
+            dsc_file = ret_task.list[0]['srcdsc_file']
+            build_name = ret_task.list[0]['buildname']
+            return {"taskid":taskid,"dscfile":dsc_file,"buildname":build_name}
+        else:
+            return None
+        pass
 
-                    pp.taskid = taskid
+    # def update_task_api(self):
+    #     ret_task = self.taskapi.daemon_fetch_task_first(channelname="dptest")
+    #     if ret_task and len(ret_task.list) == 1:
+    #         taskid = ret_task.list[0]['taskid']
+    #         dsc_file = ret_task.list[0]['srcdsc_file']
+    #         build_name = ret_task.list[0]['buildname']
+    #     pass
 
-                    self.taskapi.daemon_update_taskinfo_build(self.username,taskid)
-
-                else:
-                    time.sleep(5)
-                    print("same task")
+    def get_task_process(self,cntl_q, data_q, task_q, exit_flag):
+        while True:
+            print("proc counter %d"%(proc_counter.value))
+            if proc_counter.value > 4:
+                time.sleep(5)
+                print("runing proc %d"%proc_counter.value)
+                continue
+            taskinfo = self.fetch_task_api()
+            if taskinfo is not None:
+                cntl_q.put({'event': 'newtask'})
+                data_q.put(taskinfo)
             else:
-                print("no task found")
-        
-        self.again_timer(handler_timer)
+                continue
+                pass
+            if exit_flag.is_set():
+                cntl_q.put({'event': 'exit', 'pid': os.getpid()})
+                break
+            else:
+                pass
+            taskinfo = task_q.get()
+            if taskinfo is not None:
+                self.taskapi.daemon_update_taskinfo_build(self.username,taskid)
+                pass
+            else:
+                continue
+                pass
 
     def run(self,daemonconfig):
         self.httpdatasv = daemonconfig.options.topurl
         self.username = daemonconfig.options.username
         self.taskapi = HttpDaemonApi(daemonconfig)
 
-        self.timermain.start(self.start_process,1,2)
+        proc_pool = {} 
+        cntl_q = mp.Queue() 
+        data_q = mp.Queue() 
+        task_q = mp.Queue() 
+        exit_flag = mp.Event() 
 
-        self.loopmain.run()
+        signal(SIGINT, lambda x, y: exit_flag.set())
+        siginterrupt(SIGINT, False)
+
+        print 'main {} started'.format(os.getpid())
+        proc = mp.Process(target=self.get_task_process, args=(cntl_q, data_q, task_q, exit_flag))
+        proc.start()
+        proc_pid = proc.pid
+        proc_pool[proc_pid] = proc
+        update_counter()
+        print 'proxy {} started'.format(proc.pid)
+
+        while True:
+            item = cntl_q.get()
+            if item['event'] == 'newtask':
+                proc = mp.Process(target=self.task_worker, args=(cntl_q, data_q, task_q))
+                proc.start()
+                proc_pool[proc.pid] = proc
+                update_counter()
+                print("proc pool size:%d"%(len(proc_pool)))
+
+                print 'worker {} started'.format(proc.pid)
+            elif item['event'] == 'exit':
+                proc = proc_pool.pop(item['pid'])
+                reduce_counter()
+                proc.join()
+                print 'child {} stopped'.format(item['pid'])
+            else:
+                print 'It\'s impossible !'
+
+            if not proc_pool: 
+                break
+
+            print 'main {} stopped'.format(os.getpid())
+
 
 if __name__ == "__main__":
     app = BuildDispatcher()
