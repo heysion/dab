@@ -119,10 +119,18 @@ def test_add_package(session,e,packagename,packagever,packagedsc,hostname=None):
     
     session.commit()
 
+import sys
+
 if __name__ == "__main__":
-    dbase,session = dbinit()
-    e = dbase.getconn()
-    test_add_package(session,e,packagename="base-file",packagever="9.6",packagedsc="base-files_9.6+nmu1.dsc")
+    if len(sys.argv) is 4:
+        dbase,session = dbinit()
+        e = dbase.getconn()
+        test_add_package(session,e,
+                         packagename=sys.argv[1],
+                         packagever=sys.argv[2],
+                         packagedsc=sys.argv[3])
+    else:
+        print("run packagename packageversion packagedsc")
 #    test_fill_base_data(session,e)
 #    test_data_init(session,e)
 #    test_add_task(session,e)
