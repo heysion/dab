@@ -113,8 +113,8 @@ def test_add_package(session,e,packagename,packagever,packagedsc,hostname=None):
 
     new_task = Task(host_name=channelinfo.host_name)
     new_task.channel = channelinfo
-    new_task.build = buildinfo
-    new_task.source = srcinfo
+    new_task.build = new_build
+    new_task.source = new_source
     session.add(new_task)
     
     session.commit()
