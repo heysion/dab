@@ -12,7 +12,7 @@ import multiprocessing as mp
 from signal import signal, SIGINT, SIG_IGN, siginterrupt
 from dabdaemon import DabDaemon
 from dab.api.daemon import HttpDaemonApi
-from multiprocessing import Process,Queue,Event
+from multiprocessing import Process,Queue,Event,Manager
 import pdb
 
 import subprocess
