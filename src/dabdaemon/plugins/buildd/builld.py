@@ -15,6 +15,7 @@ from dab.api.daemon import HttpDaemonApi
 from multiprocessing import Process
 import pdb
 
+import subprocess
 import os
 import sys
 
@@ -113,7 +114,7 @@ class BuildDispatcher(DabDaemon):
         exit_flag = mp.Event() 
 
         signal(SIGINT, lambda x, y: exit_flag.set())
-        siginterrupt(SIGINT, False)
+        # siginterrupt(SIGINT, False)
 
         print 'main {} started'.format(os.getpid())
         proc = mp.Process(target=self.get_task_process, args=(cntl_q, data_q, task_q, exit_flag))
