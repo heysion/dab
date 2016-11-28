@@ -12,7 +12,7 @@ import multiprocessing as mp
 from signal import signal, SIGINT, SIG_IGN, siginterrupt
 from dabdaemon import DabDaemon
 from dab.api.daemon import HttpDaemonApi
-from multiprocessing import Process
+from multiprocessing import Process,Queue,Event
 import pdb
 
 import subprocess
@@ -33,32 +33,31 @@ def reduce_counter():
 
 
 class BuildDispatcher(DabDaemon):
-    # def process_exit_cb(self,proc,exit_status,term_signal):
-    #     print(exit_status)
-    #     if hasattr(proc,"taskid"):
-    #         print("proc len: %d"%(self.tasklist.length()))
-    #         if exit_status is 0 :
-    #             self.taskapi.daemon_update_taskinfo_success(self.username,int(proc.taskid))
-    #             self.tasklist.rm_taskinfo(int(proc.taskid))
-    #         else:
-    #             self.taskapi.daemon_update_taskinfo_failed(self.username,int(proc.taskid))
-    #     else:
-    #         print("error task info")
-    #     pass
-
-    def task_worker(self,cntl_q, data_q, task_q):
-        taskinfo = data_q.get()
+    def task_worker(self,task_cntl_queue, task_data_queue):
+        taskinfo = task_data_queue.get()
         print(taskinfo)
         if taskinfo is not None:
+            log_name = self.workdir+"/"+taskinfo["buildname"]+taskinfo["taskid"]+".log"
+            log_file = open(log_name,"a+")
+
+            self.taskapi.daemon_update_taskinfo_build(self.username,taskinfo["taskid"])
             proc_cmd= ["deepin-buildpkg","-d", "%s/%s"%(self.httpdatasv,taskinfo["dscfile"]), "-p"]
             print(proc_cmd)
-            ret = subprocess.call(proc_cmd)
+
+            ret = subprocess.call(proc_cmd,stdout=log_file,stderr=log_file)
+            log_file.close()            
+
+            if ret/256 == 0 :
+                self.taskapi.daemon_update_taskinfo_success(self.username,taskinfo["taskid"])
+            else:
+                self.taskapi.daemon_update_taskinfo_failed(self.username,taskinfo["taskid"])
             pass
+
         else:
             return None
-        taskid = 1
-        task_q.put(taskinfo)
-        cntl_q.put({'event': 'exit', 'pid': os.getpid()})
+        #taskid = 1
+        #task_q.put(taskinfo)
+        task_cntl_queue.put({'event': 'exit', 'pid': os.getpid()})
         pass
 
     def fetch_task_api(self):
@@ -76,7 +75,7 @@ class BuildDispatcher(DabDaemon):
     def failed_sleep(self):
         time.sleep(5)
 
-    def get_task_process(self,cntl_q, data_q, task_q, exit_flag):
+    def proxy_task_process(self,task_cntl_queue, task_data_queue, exit_flag):
         while True:
             print("proc counter %d"%(proc_counter.value))
             if proc_counter.value > 4:
@@ -85,41 +84,34 @@ class BuildDispatcher(DabDaemon):
                 continue
             taskinfo = self.fetch_task_api()
             if taskinfo is not None:
-                cntl_q.put({'event': 'newtask'})
-                data_q.put(taskinfo)
+                task_cntl_queue.put({'event': 'newtask'})
+                task_data_queue.put(taskinfo)
             else:
                 self.failed_sleep()
                 continue
                 pass
             if exit_flag.is_set():
-                cntl_q.put({'event': 'exit', 'pid': os.getpid()})
+                #if exit kill self
+                task_cntl_queue.put({'event': 'exit', 'pid': os.getpid()})
                 break
             else:
-                pass
-            taskinfo = task_q.get()
-            if taskinfo is not None:
-                self.taskapi.daemon_update_taskinfo_build(self.username,taskinfo["taskid"])
-                pass
-            else:
-                continue
                 pass
 
     def run(self,daemonconfig):
         self.httpdatasv = daemonconfig.options.topurl
         self.username = daemonconfig.options.username
         self.taskapi = HttpDaemonApi(daemonconfig)
-
+        self.workdir = daemonconfig.options.workdir
         proc_pool = {} 
-        cntl_q = mp.Queue() 
-        data_q = mp.Queue() 
-        task_q = mp.Queue() 
+        task_cntl_queue = Queue()
+        task_data_queue = Queue()
         exit_flag = mp.Event() 
 
         signal(SIGINT, lambda x, y: exit_flag.set())
         # siginterrupt(SIGINT, False)
 
         print 'main {} started'.format(os.getpid())
-        proc = mp.Process(target=self.get_task_process, args=(cntl_q, data_q, task_q, exit_flag))
+        proc = mp.Process(target=self.proxy_task_process, args=(task_cntl_queue, task_data_queue, exit_flag))
         proc.start()
         proc_pid = proc.pid
         proc_pool[proc_pid] = proc
@@ -127,14 +119,12 @@ class BuildDispatcher(DabDaemon):
         print 'proxy {} started'.format(proc.pid)
 
         while True:
-            item = cntl_q.get()
+            item = task_cntl_queue.get()
             if item['event'] == 'newtask':
-                proc = mp.Process(target=self.task_worker, args=(cntl_q, data_q, task_q))
+                proc = mp.Process(target=self.task_worker, args=(task_cntl_queue, task_data_queue))
                 proc.start()
                 proc_pool[proc.pid] = proc
                 update_counter()
-                print("proc pool size:%d"%(len(proc_pool)))
-
                 print 'worker {} started'.format(proc.pid)
             elif item['event'] == 'exit':
                 proc = proc_pool.pop(item['pid'])
