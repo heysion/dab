@@ -96,10 +96,34 @@ def test_add_task(session,e):
     session.commit()
     pass
 
+def test_add_package(session,e,packagename,packagever,packagedsc,hostname=None):
+    target = session.query(Target).filter(Target.name=="deepinmips64el").first()
+    new_build = Build(target_name=target.name,name=packagename,
+                    arches="mips64el",enabled=True)
+    session.add(new_build)
+    #build = session.query(Build).filter(Build.name=="mbr").first()
+    #print(build.__dict__)
+    new_source = Source(build_name=new_build.name, target_name=new_build.target_name,
+                     name=packagename, version=packagever,
+                     dsc_file=packagedsc)
+    session.add(new_source)
+    channelinfo = session.query(Channel).filter(Channel.target_name==new_source.target_name,
+                                                Channel.arches==new_build.arches).order_by(
+                                                    desc(Channel.curr_job)).first()
+
+    new_task = Task(host_name=channelinfo.host_name)
+    new_obj.channel = channelinfo
+    new_obj.build = buildinfo
+    new_obj.source = srcinfo
+    session.add(new_obj)
+    
+    session.commit()
+
 if __name__ == "__main__":
     dbase,session = dbinit()
     e = dbase.getconn()
+    test_add_package(session,e,packagename="base-file",packagever="9.6",packagedsc="base-files_9.6+nmu1.dsc")
 #    test_fill_base_data(session,e)
 #    test_data_init(session,e)
-    test_add_task(session,e)
+#    test_add_task(session,e)
     
