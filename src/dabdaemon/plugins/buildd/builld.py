@@ -31,12 +31,12 @@ def reduce_counter():
     global proc_counter
     proc_counter.reduce()
 
-
 class BuildDispatcher(DabDaemon):
-    def task_worker(self,task_cntl_queue, task_data_queue):
+    def task_worker(self,task_cntl_queue, task_data_queue, task_pool):
         taskinfo = task_data_queue.get()
         print(taskinfo)
         if taskinfo is not None:
+            task_pool[taskinfo["taskid"]] = os.getpid()
             log_name = "{}/{}-{}.log".format(self.workdir,taskinfo["buildname"],taskinfo["taskid"])
             log_file = open(log_name,"a+")
 
@@ -75,7 +75,7 @@ class BuildDispatcher(DabDaemon):
     def failed_sleep(self):
         time.sleep(5)
 
-    def proxy_task_process(self,task_cntl_queue, task_data_queue, exit_flag):
+    def proxy_task_process(self,task_cntl_queue, task_data_queue, exit_flag, task_pool):
         while True:
             print("proc counter %d"%(proc_counter.value))
             if proc_counter.value > 4:
@@ -83,7 +83,8 @@ class BuildDispatcher(DabDaemon):
                 print("runing proc %d"%proc_counter.value)
                 continue
             taskinfo = self.fetch_task_api()
-            if taskinfo is not None:
+            if taskinfo is not None and (taskinfo['taskid'] not in task_pool.keys()):
+                task_pool[taskinfo['taskid']] = None
                 task_cntl_queue.put({'event': 'newtask'})
                 task_data_queue.put(taskinfo)
             else:
@@ -102,16 +103,21 @@ class BuildDispatcher(DabDaemon):
         self.username = daemonconfig.options.username
         self.taskapi = HttpDaemonApi(daemonconfig)
         self.workdir = daemonconfig.options.workdir
-        proc_pool = {} 
+
+        manager = Manager()
+
+        task_pool = manager.dict()
+        proc_pool = {}
         task_cntl_queue = Queue()
         task_data_queue = Queue()
-        exit_flag = mp.Event() 
+        exit_flag = mp.Event()
 
         signal(SIGINT, lambda x, y: exit_flag.set())
         # siginterrupt(SIGINT, False)
 
         print 'main {} started'.format(os.getpid())
-        proc = mp.Process(target=self.proxy_task_process, args=(task_cntl_queue, task_data_queue, exit_flag))
+        proc = mp.Process(target=self.proxy_task_process, 
+                          args=(task_cntl_queue, task_data_queue, exit_flag, task_pool))
         proc.start()
         proc_pid = proc.pid
         proc_pool[proc_pid] = proc
@@ -121,13 +127,15 @@ class BuildDispatcher(DabDaemon):
         while True:
             item = task_cntl_queue.get()
             if item['event'] == 'newtask':
-                proc = mp.Process(target=self.task_worker, args=(task_cntl_queue, task_data_queue))
+                proc = mp.Process(target=self.task_worker, args=(task_cntl_queue, task_data_queue, task_pool))
                 proc.start()
                 proc_pool[proc.pid] = proc
                 update_counter()
                 print 'worker {} started'.format(proc.pid)
             elif item['event'] == 'exit':
                 proc = proc_pool.pop(item['pid'])
+                task_id = task_pool.keys()[task_pool.values().index(item['pid'])]
+                task_poo.pop(task_id)
                 reduce_counter()
                 proc.join()
                 print 'child {} stopped'.format(item['pid'])
@@ -136,9 +144,7 @@ class BuildDispatcher(DabDaemon):
 
             if not proc_pool: 
                 break
-
-            print 'main {} stopped'.format(os.getpid())
-
+        print 'main {} stopped'.format(os.getpid())
 
 if __name__ == "__main__":
     app = BuildDispatcher()
