@@ -83,8 +83,9 @@ class BuildDispatcher(DabDaemon):
                 print("runing proc %d"%proc_counter.value)
                 continue
             taskinfo = self.fetch_task_api()
-            if taskinfo is not None and (taskinfo['taskid'] not in task_pool.keys()):
-                task_pool[taskinfo['taskid']] = None
+            task_id = taskinfo['taskid']
+            if taskinfo is not None and not (task_id  in task_pool.keys()):
+                task_pool[task_id] = None
                 task_cntl_queue.put({'event': 'newtask'})
                 task_data_queue.put(taskinfo)
             else:
