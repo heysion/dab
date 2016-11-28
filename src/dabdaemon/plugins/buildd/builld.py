@@ -70,11 +70,14 @@ class BuildDispatcher(DabDaemon):
             return None
         pass
 
+    def failed_sleep(self):
+        time.sleep(5)
+
     def get_task_process(self,cntl_q, data_q, task_q, exit_flag):
         while True:
             print("proc counter %d"%(proc_counter.value))
             if proc_counter.value > 4:
-                time.sleep(5)
+                self.failed_sleep()
                 print("runing proc %d"%proc_counter.value)
                 continue
             taskinfo = self.fetch_task_api()
@@ -82,6 +85,7 @@ class BuildDispatcher(DabDaemon):
                 cntl_q.put({'event': 'newtask'})
                 data_q.put(taskinfo)
             else:
+                self.failed_sleep()
                 continue
                 pass
             if exit_flag.is_set():
