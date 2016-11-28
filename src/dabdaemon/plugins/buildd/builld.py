@@ -33,29 +33,31 @@ def reduce_counter():
 
 
 class BuildDispatcher(DabDaemon):
-    def process_exit_cb(self,proc,exit_status,term_signal):
-        print(exit_status)
-        if hasattr(proc,"taskid"):
-            print("proc len: %d"%(self.tasklist.length()))
-            if exit_status is 0 :
-                self.taskapi.daemon_update_taskinfo_success(self.username,int(proc.taskid))
-                self.tasklist.rm_taskinfo(int(proc.taskid))
-            else:
-                self.taskapi.daemon_update_taskinfo_failed(self.username,int(proc.taskid))
-        else:
-            print("error task info")
-        pass
+    # def process_exit_cb(self,proc,exit_status,term_signal):
+    #     print(exit_status)
+    #     if hasattr(proc,"taskid"):
+    #         print("proc len: %d"%(self.tasklist.length()))
+    #         if exit_status is 0 :
+    #             self.taskapi.daemon_update_taskinfo_success(self.username,int(proc.taskid))
+    #             self.tasklist.rm_taskinfo(int(proc.taskid))
+    #         else:
+    #             self.taskapi.daemon_update_taskinfo_failed(self.username,int(proc.taskid))
+    #     else:
+    #         print("error task info")
+    #     pass
 
     def task_worker(self,cntl_q, data_q, task_q):
         taskinfo = data_q.get()
+        print(taskinfo)
         if taskinfo is not None:
             proc_cmd= ["deepin-buildpkg","-d", "%s/%s"%(self.httpdatasv,taskinfo["dscfile"]), "-p"]
+            print(proc_cmd)
             ret = subprocess.call(proc_cmd)
             pass
         else:
             return None
         taskid = 1
-        task_q.put({"event":'updatetask','taskid':taskid})
+        task_q.put(taskinfo)
         cntl_q.put({'event': 'exit', 'pid': os.getpid()})
         pass
 
@@ -96,7 +98,7 @@ class BuildDispatcher(DabDaemon):
                 pass
             taskinfo = task_q.get()
             if taskinfo is not None:
-                self.taskapi.daemon_update_taskinfo_build(self.username,taskid)
+                self.taskapi.daemon_update_taskinfo_build(self.username,taskinfo["taskid"])
                 pass
             else:
                 continue
