@@ -112,10 +112,10 @@ def test_add_package(session,e,packagename,packagever,packagedsc,hostname=None):
                                                     desc(Channel.curr_job)).first()
 
     new_task = Task(host_name=channelinfo.host_name)
-    new_obj.channel = channelinfo
-    new_obj.build = buildinfo
-    new_obj.source = srcinfo
-    session.add(new_obj)
+    new_task.channel = channelinfo
+    new_task.build = buildinfo
+    new_task.source = srcinfo
+    session.add(new_task)
     
     session.commit()
 
