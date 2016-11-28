@@ -37,7 +37,7 @@ class BuildDispatcher(DabDaemon):
         taskinfo = task_data_queue.get()
         print(taskinfo)
         if taskinfo is not None:
-            log_name = self.workdir+"/"+taskinfo["buildname"]+taskinfo["taskid"]+".log"
+            log_name = "{}/{}-{}.log".format(self.workdir,taskinfo["buildname"],taskinfo["taskid"])
             log_file = open(log_name,"a+")
 
             self.taskapi.daemon_update_taskinfo_build(self.username,taskinfo["taskid"])
