@@ -60,6 +60,7 @@ class BuildDispatcher(DabDaemon):
 
     def fetch_task_api(self):
         ret_task = self.taskapi.daemon_fetch_task_first(channelname="dptest")
+        print(ret_task)
         if ret_task and len(ret_task.list) == 1:
             taskid = ret_task.list[0]['taskid']
             dsc_file = ret_task.list[0]['srcdsc_file']
@@ -68,14 +69,6 @@ class BuildDispatcher(DabDaemon):
         else:
             return None
         pass
-
-    # def update_task_api(self):
-    #     ret_task = self.taskapi.daemon_fetch_task_first(channelname="dptest")
-    #     if ret_task and len(ret_task.list) == 1:
-    #         taskid = ret_task.list[0]['taskid']
-    #         dsc_file = ret_task.list[0]['srcdsc_file']
-    #         build_name = ret_task.list[0]['buildname']
-    #     pass
 
     def get_task_process(self,cntl_q, data_q, task_q, exit_flag):
         while True:
