@@ -77,26 +77,27 @@ class BuildDispatcher(DabDaemon):
 
     def proxy_task_process(self,task_cntl_queue, task_data_queue, exit_flag, task_pool):
         while True:
+            if exit_flag.is_set():
+                #if exit kill self
+                task_cntl_queue.put({'event': 'exit', 'pid': os.getpid()})
+                break
+
             print("proc counter %d"%(proc_counter.value))
             if proc_counter.value > 4:
                 self.failed_sleep()
                 print("runing proc %d"%proc_counter.value)
                 continue
+            
             taskinfo = self.fetch_task_api()
-            task_id = taskinfo['taskid']
-            if taskinfo is not None and not (task_id  in task_pool.keys()):
-                task_pool[task_id] = None
-                task_cntl_queue.put({'event': 'newtask'})
-                task_data_queue.put(taskinfo)
+            if taskinfo is not None :
+                task_id = taskinfo['taskid']
+                if task_id not in task_pool.keys():
+                    task_pool[task_id] = None
+                    task_cntl_queue.put({'event': 'newtask'})
+                    task_data_queue.put(taskinfo)
             else:
                 self.failed_sleep()
                 continue
-                pass
-            if exit_flag.is_set():
-                #if exit kill self
-                task_cntl_queue.put({'event': 'exit', 'pid': os.getpid()})
-                break
-            else:
                 pass
 
     def run(self,daemonconfig):
