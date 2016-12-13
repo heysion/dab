@@ -87,17 +87,17 @@ class BuildDispatcher(DabDaemon):
                 self.failed_sleep()
                 print("runing proc %d"%proc_counter.value)
                 continue
-            
-            taskinfo = self.fetch_task_api()
-            if taskinfo is not None :
-                task_id = taskinfo['taskid']
-                if task_id not in task_pool.keys():
-                    task_pool[task_id] = None
-                    task_cntl_queue.put({'event': 'newtask'})
-                    task_data_queue.put(taskinfo)
             else:
-                self.failed_sleep()
-                continue
+                taskinfo = self.fetch_task_api()
+                if taskinfo is not None :
+                    task_id = taskinfo['taskid']
+                    if task_id not in task_pool.keys():
+                        task_pool[task_id] = None
+                        task_cntl_queue.put({'event': 'newtask'})
+                        task_data_queue.put(taskinfo)
+                else:
+                    self.failed_sleep()
+                    continue
                 pass
 
     def run(self,daemonconfig):
