@@ -53,7 +53,7 @@ def _add_buildpkg(session,e,pkgname,pkgversion,pkgdsc,hostname=None):
     else:
         channelinfo = session.query(Channel).filter(Channel.target_name=="deepinmips64el",
                                                     Channel.arches==build.arches,
-                                                    Channel.host_name=hostname).order_by(
+                                                    Channel.host_name==hostname).order_by(
                                                         desc(Channel.curr_job)).first()
 
     new_task = Task(host_name=channelinfo.host_name)
@@ -67,7 +67,7 @@ def _add_buildpkg(session,e,pkgname,pkgversion,pkgdsc,hostname=None):
     pass
 
 if __name__ == "__main__":
-    if len(sys.argv) > 3:
+    if len(sys.argv) > 2:
         print(sys.argv)
         if sys.argv[1] == "newtask":
             dsc_absolute_path = sys.argv[2]
