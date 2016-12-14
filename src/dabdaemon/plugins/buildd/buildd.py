@@ -137,7 +137,7 @@ class BuildDispatcher(DabDaemon):
             elif item['event'] == 'exit':
                 proc = proc_pool.pop(item['pid'])
                 task_id = task_pool.keys()[task_pool.values().index(item['pid'])]
-                task_poo.pop(task_id)
+                task_pool.pop(task_id)
                 reduce_counter()
                 proc.join()
                 print 'child {} stopped'.format(item['pid'])

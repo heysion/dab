@@ -35,7 +35,7 @@ def _add_buildpkg(session,e,pkgname,pkgversion,pkgdsc,hostname=None):
         print("not found target")
         return
     
-    build = session.query(Build).filter(build.name==pkgname).first()
+    build = session.query(Build).filter(Build.name==pkgname).first()
     if build is None:
         new_build = Build(target_name=target.name,name=pkgname,
                       arches="mips64el",enabled=True)
