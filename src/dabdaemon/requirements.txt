@@ -1,3 +1,0 @@
-pyuv
-requests
-#yaml apt-get install python-yaml
