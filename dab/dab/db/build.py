@@ -15,7 +15,7 @@ from package import Package
 
 class Build(Base):
     class Meta:
-        db_table = "dscinfo"
+        db_table = "debinfo"
     target_name = ForeignKeyField(Target, to_field="name", db_column='target_name')
     package_name = ForeignKeyField(Package, to_field="name", db_column="package_name")
     name = CharField(unique=True)
@@ -29,7 +29,6 @@ class Build(Base):
     filesize = IntegerField(null=True)
     description = CharField(null=True)
 
-#    __table_args__ = (UniqueConstraint("name",name="buildname_o_1"),)
 
 def run_test():
     Build.create_table()

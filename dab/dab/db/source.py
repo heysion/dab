@@ -28,7 +28,6 @@ class Source(Base):
     filesize = IntegerField(null=True)
     description = CharField(null=True)
 
-
 def run_test():
     Source.create_table()
     pkg = Source(target_name="deepin",package_name="deepin-auto-build",name="deepin-auto-build",version="0.1.1",dsc_file="deepin-auto-build.dsc")

@@ -15,7 +15,7 @@ from dab.db.target import Target
 class Package(Base):
     class Meta:
         db_table = "pkginfo"
-    name = CharField()
+    name = CharField() 
     target_name = ForeignKeyField(Target,to_field='name',db_column="target_name")
     enabled = BooleanField()
 

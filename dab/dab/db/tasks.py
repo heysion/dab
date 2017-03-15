@@ -7,55 +7,54 @@
 @license: GPLv3
 '''
 
-from sqlalchemy import Column, ForeignKey, Integer, String ,DateTime ,Time , Boolean
-from sqlalchemy.orm import relationship
-from sqlalchemy import UniqueConstraint
 from datetime import datetime
+from peewee import CharField, BooleanField ,IntegerField, DateTimeField
+from peewee import ForeignKeyField
 
-from __init__ import Base,da_session,da_create_engine
-from __init__ import da_init_test as dainit
-from users import User
-from channels import Channel
+from dab.db import Base
+from target import Target
+from package import Package
+from channel import Channel
 from host import Host
-from source import Source
-from build import Build
 
 
 class Task(Base):
+    class Meta:
+        db_table = "debinfo"
+
     __tablename__ = 'taskinfo'
-    id = Column(Integer, primary_key=True)
-    state = Column(Integer,default=0)
+#    id = Column(Integer, primary_key=True)
+    state = IntegerField(default=0) #FIXME
     # 0 init 
     # 100 submit 
     # 200 start 
     # 300 build 
     # 400 failed 
     # 500 success 
-    create_time = Column(DateTime, nullable=False, default=datetime.now())
-    start_time = Column(DateTime)
-    completion_time = Column(DateTime)
-    channel_name= Column(String(256), ForeignKey("channelinfo.name"))
-    host_name = Column(String(256), ForeignKey("hostinfo.name"))
+    create_time = DateTimeField(default=datetime.now()) #FIXME
+    start_time = DateTimeField()
+    completion_time = DateTimeField()
+    channel_name = ForeignKeyField(Channel,to_field='name',db_column="channel_name",null=True)
+    host_name = ForeignKeyField(Host,to_field='name',db_column="hosts_name",null=True)
+    #channel_name= CharField ForeignKey("channelinfo.name"))
+    #host_name = Column(String(256), ForeignKey("hostinfo.name"))
 
-    src_id = Column(Integer, ForeignKey("srcinfo.id"))
-    src_name = Column(String(256), ForeignKey("srcinfo.name"))
-    build_id = Column(Integer, ForeignKey("buildinfo.id"))
-    build_name = Column(String(256), ForeignKey("buildinfo.name"))
+    src_id = ForeignKeyField(Source,to_filed="id",db_column="src_id",null=True)
+    src_name = ForeignKeyField(Source,to_filed="name",db_column="src_name",null=True)
+    build_id = ForeignKeyField(Build,to_filed="id",db_column="build_id",null=True)
+    build_name = ForeignKeyField(Build,to_filed="name",db_column="build_name",null=True)
 
-    parent = Column(Integer, nullable=True)
-    label = Column(String(256))
-    waiting = Column(Boolean)
-    awaited = Column(Boolean)
-    owner = Column(Integer, ForeignKey("userinfo.id"))
-    ownwer_name = Column(String(256), ForeignKey("userinfo.id"))
-    arch = Column(String(32))
-    priority = Column(Integer)
-    
-    # user = relationship("User",backref="taskinfo")
-    # channel = relationship("Channel",backref="taskinfo")
-    # host = relationship("Host",backref="taskinfo")
-    # source = relationship("Source",backref="taskinfo")
-    # build = relationship("Build",backref="taskinfo")
+    # build_id = Column(Integer, ForeignKey("buildinfo.id"))
+    # build_name = Column(String(256), ForeignKey("buildinfo.name"))
+
+    parent = IntegerField(null=True)
+    label = CharField()
+    waiting = BooleanField()
+    awaited = BooleanField()
+    owner = ForeignKeyField(User,to_filed="id",db_column="ower_id",null=True)
+    owner_name = ForeignKeyField(User,to_filed="name",db_column="ower_name",null=True)
+    arch = CharField(32)
+    priority = IntegerField()
     
     # def __init__(self,state=0,channel_name=None,host_name=None,src_id=None,):
     #     self.state = state
@@ -72,10 +71,9 @@ class Task(Base):
         pass
 
 def run_test():
-    session = dainit(True)
-    new_obj = Host(name="test")
-    session.add(new_obj)
-    session.commit()
+    Task.create_table()
+    obj = Task(name="test",target_name="deepin",enabled=False)
+    obj.save(force_insert=True)
 
 if __name__ == "__main__":
     run_test()
