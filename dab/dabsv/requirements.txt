@@ -1,0 +1,7 @@
+#redis
+tornado
+#pyuv
+sqlalchemy
+psycopg2
+requests
+#yaml apt-get install python-yaml
