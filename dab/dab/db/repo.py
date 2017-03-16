@@ -15,14 +15,14 @@ from dab.db.package import Package
 class RepoCtl(Base):
     class Meta:
         db_table = "repoctl"
-    name = CharField() 
+    name = CharField(primary_key=True) 
     package_name = ForeignKeyField(Package,to_filed="name",db_column="package_name")
     version = CharField()
 
 class Repo(Base):
     class Meta:
         db_table = "repoinfo"
-    name = CharField()
+    name = ForeignKeyField(RepoCtl,to_filed="name",db_column="repctl_name")
     repoctl_name = CharField()
     update_time = DateTimeField()
     repo_config = CharField()
