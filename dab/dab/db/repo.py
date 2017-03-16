@@ -6,6 +6,7 @@
 @copyright: 2016, Heysion Yuan <heysions@gmail.com>
 @license: GPLv3
 '''
+from datetime import datetime
 from peewee import CharField, BooleanField, DateTimeField
 from peewee import ForeignKeyField
 
@@ -24,7 +25,7 @@ class Repo(Base):
         db_table = "repoinfo"
     name = ForeignKeyField(RepoCtl,to_filed="name",db_column="repctl_name")
     repoctl_name = CharField()
-    update_time = DateTimeField()
+    update_time = DateTimeField(default=datetime.now())
     repo_config = CharField()
     enabled = BooleanField()
     
@@ -38,4 +39,4 @@ def run_test():
 
 if __name__ == "__main__":
     run_test()
-    pass    
+    pass

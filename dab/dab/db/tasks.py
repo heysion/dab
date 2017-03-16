@@ -24,37 +24,32 @@ class Task(Base):
 
     __tablename__ = 'taskinfo'
 #    id = Column(Integer, primary_key=True)
-    state = IntegerField(default=0) #FIXME
+    state = IntegerField(default=0)
     # 0 init 
     # 100 submit 
     # 200 start 
     # 300 build 
     # 400 failed 
     # 500 success 
-    create_time = DateTimeField(default=datetime.now()) #FIXME
-    start_time = DateTimeField()
-    completion_time = DateTimeField()
+    create_time = DateTimeField(default=datetime.now())
+    start_time = DateTimeField(null=True)
+    completion_time = DateTimeField(null=True)
     channel_name = ForeignKeyField(Channel,to_field='name',db_column="channel_name",null=True)
     host_name = ForeignKeyField(Host,to_field='name',db_column="hosts_name",null=True)
-    #channel_name= CharField ForeignKey("channelinfo.name"))
-    #host_name = Column(String(256), ForeignKey("hostinfo.name"))
 
     src_id = ForeignKeyField(Source,to_filed="id",db_column="src_id",null=True)
     src_name = ForeignKeyField(Source,to_filed="name",db_column="src_name",null=True)
     build_id = ForeignKeyField(Build,to_filed="id",db_column="build_id",null=True)
     build_name = ForeignKeyField(Build,to_filed="name",db_column="build_name",null=True)
 
-    # build_id = Column(Integer, ForeignKey("buildinfo.id"))
-    # build_name = Column(String(256), ForeignKey("buildinfo.name"))
-
     parent = IntegerField(null=True)
-    label = CharField()
-    waiting = BooleanField()
-    awaited = BooleanField()
+    label = CharField(null=True)
+    waiting = BooleanField(null=True)
+    awaited = BooleanField(null=True)
     owner = ForeignKeyField(User,to_filed="id",db_column="ower_id",null=True)
     owner_name = ForeignKeyField(User,to_filed="name",db_column="ower_name",null=True)
     arch = CharField(32)
-    priority = IntegerField()
+    priority = IntegerField(default=-1)
     
     # def __init__(self,state=0,channel_name=None,host_name=None,src_id=None,):
     #     self.state = state
@@ -62,13 +57,13 @@ class Task(Base):
     #     self.host_name = host_name
     #     self.src_id = src_id
 
-    @classmethod
-    def get_task_info_daemon(cls,session,channel_name,host_name):
-        task_list = session.query(Task).filter(Task.channel_name==channel_name,
-                                               Task.host_name==host_name).all()
-        return task_list
-    def update_task_info(self):
-        pass
+    # @classmethod
+    # def get_task_info_daemon(cls,session,channel_name,host_name):
+    #     task_list = session.query(Task).filter(Task.channel_name==channel_name,
+    #                                            Task.host_name==host_name).all()
+    #     return task_list
+    # def update_task_info(self):
+    #     pass
 
 def run_test():
     Task.create_table()
