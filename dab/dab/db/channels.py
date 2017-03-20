@@ -6,43 +6,40 @@
 @copyright: 2016, Heysion Yuan <heysions@gmail.com>
 @license: GPLv3
 '''
-from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
-from sqlalchemy.orm import relationship
-from sqlalchemy import UniqueConstraint
+from datetime import datetime
+from peewee import CharField, BooleanField ,IntegerField, DateTimeField
+from peewee import ForeignKeyField
 
-from __init__ import Base,da_session,da_create_engine
-from __init__ import da_init_test as dainit
-
-from host import Host
+from dab.db import Base
 from target import Target
+from host import Host
 
 class Channel(Base):
-    __tablename__ = 'channelinfo'
-#    id = Column(Integer, primary_key=True)
-    host_name = Column(String(256), ForeignKey('hostinfo.name'))
-    target_name = Column(String(256), ForeignKey('targetinfo.name'))
-    name = Column(String(256), primary_key=True, nullable=False)
-    arches = Column(String(256))
-    enabled = Column(Boolean)
-    max_job = Column(Integer)
-    curr_job = Column(Integer)
-    
-    host = relationship("Host",backref="channelinfo")
-    target = relationship("Target",backref="channelinfo")
+    class Meta:
+        db_table = "channelinfo"
+    name = CharField(primary_key=True)
 
-    @classmethod
-    def update_channel_info(cls,session,channel_name,host_name,max_job,curr_job,state):
-        channelinfo = session.query(Channel).filter(Channel.name==channel_name,
-                                                    Channel.host_name==host_name).first()
-        if channelinfo:
-            channelinfo.max_job = max_job
-            channel_id.curr_job = curr_job
-            channel_id.enabled = state
-            session.flush()
-            session.commit()
-            return True
-        else:
-            return False
+    host_name = ForeignKeyField(Host,to_filed='name',db_column="host_name")
+    target_name = ForeignKeyField(Target,to_filed='name',db_column="target_name")
+
+    arches = CharField()
+    enabled = BooleanField()
+    max_job = IntegerField()
+    curr_job = IntegerField()
+    
+    # @classmethod
+    # def update_channel_info(cls,session,channel_name,host_name,max_job,curr_job,state):
+    #     channelinfo = session.query(Channel).filter(Channel.name==channel_name,
+    #                                                 Channel.host_name==host_name).first()
+    #     if channelinfo:
+    #         channelinfo.max_job = max_job
+    #         channel_id.curr_job = curr_job
+    #         channel_id.enabled = state
+    #         session.flush()
+    #         session.commit()
+    #         return True
+    #     else:
+    #         return False
 
 def run_test():
     session = dainit(True)

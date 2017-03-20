@@ -20,9 +20,7 @@ from host import Host
 
 class Task(Base):
     class Meta:
-        db_table = "debinfo"
-
-    __tablename__ = 'taskinfo'
+        db_table = "taskinfo"
 #    id = Column(Integer, primary_key=True)
     state = IntegerField(default=0)
     # 0 init 
