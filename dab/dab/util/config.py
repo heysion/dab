@@ -6,15 +6,22 @@
 @copyright: 2016, Heysion Yuan <heysions@gmail.com>
 @license: GPLv3
 '''
+import pdb
 import os.path
 
-import pdb
 from ConfigParser import ConfigParser
 from optparse import OptionParser
+import argparse
 from error import ConfigError
+import argparse
+
+import sys
 
 def str2bool(r):
     return r == "True"
+
+def str2int(r):
+    return int(r)
 
 class DaemonConfig():
     def __init__(self,config="/etc/dab/daemon.conf"):
@@ -86,14 +93,72 @@ class DaemonConfig():
 
     pass
 
+class DabsvConfig(object):
+    def __new__(cls,*args,**kw):
+        if not hasattr(cls,"_instance"):
+            orig = super(DabsvConfig, cls)
+            cls._instace = orig.__new__(cls, *args, **kw)
+        return cls._instace
+
+    def update_options(self,dabargs):
+        """process options from command line and config file"""
+        parser = argparse.ArgumentParser("[option]",description="process options from command line and config file")
+        parser.add_argument("-c", "--config", dest="config",
+                          help="use alternate configuration file", metavar="FILE",
+                          default="/etc/dab/dabsv.conf")
+
+        parser.add_argument("-d", "--debug", dest="debug", action="store_true", 
+                            help="show debug output",
+                            default=False)
+
+        parser.add_argument("--dbtype", help="database type")
+        parser.add_argument("--dbhost", help="database host ip")
+        parser.add_argument("--dbport", help="database host port",type=int)
+        parser.add_argument("--dbuname", help="database username")
+        parser.add_argument("--dbpasswd", help="database password")
+
+        options = parser.parse_args(args=dabargs)
+        # load config
+        if options.config:
+            if os.path.exists(options.config):
+                self.config = options.config
+            else:
+                raise ConfigError("not found config %s"%(config))
+            self.confp = ConfigParser()
+            self.confp.read(self.config)
+            if not self.confp.has_section("service"):
+                raise ConfigError("not found service section")
+            
+            for key ,value in self.confp.items("service"):
+                if not getattr(self, key, None):
+                    setattr(self, key, value)
+        #merge options to config
+        opt_list = vars(options)
+        for key in opt_list.keys():
+            if opt_list[key]:
+                setattr(self, key, opt_list[key])
+        if not isinstance(self.dbport, int):
+            self.dbport = int(self.dbport)
+        if not isinstance(self.debug, bool):
+            self.debug = str2bool(self.debug)
+        # if options.debug:
+        #     self.debug = options.debug
+        # if options.dbtype.lower() in "sqlite":
+        #     pass
+        pass
+
 if __name__ == "__main__":
-    opt = DaemonConfig.get_options()
+    opt = DabsvConfig()
+    print sys.argv
+    opt.update_options(sys.argv[1:])
     print(opt.__dict__)
-    test = DaemonConfig(opt.config)
-    test.update_options(opt)
-    print(test.options.__dict__)
-    print(test.options.workdir)
-    print(test.options.arches)
+    # opt = DaemonConfig.get_options()
+    # print(opt.__dict__)
+    # test = DaemonConfig(opt.config)
+    # test.update_options(opt)
+    # print(test.options.__dict__)
+    # print(test.options.workdir)
+    # print(test.options.arches)
 
 # daemon_config = "cbsd.conf"
 # config = ConfigParser()
