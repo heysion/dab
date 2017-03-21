@@ -6,16 +6,13 @@
 @copyright: 2016, Heysion Yuan <heysions@gmail.com>
 @license: GPLv3
 '''
-import pdb
 import os.path
+import sys
+import argparse
 
 from ConfigParser import ConfigParser
-from optparse import OptionParser
-import argparse
 from error import ConfigError
-import argparse
 
-import sys
 
 def str2bool(r):
     return r == "True"
