@@ -9,14 +9,14 @@
 
 from sqlalchemy import desc
 
-from dabdb.dbconn import dbinit
-from dabdb.da.target import Target
-from dabdb.da.users import User
-from dabdb.da.host import Host
-from dabdb.da.channels import Channel
-from dabdb.da.build import Build
-from dabdb.da.source import Source
-from dabdb.da.tasks import Task
+from dab.db.dbconn import dbinit
+from dab.db.target import Target
+from dab.db.users import User
+from dab.db.host import Host
+from dab.db.channels import Channel
+from dab.db.build import Build
+from dab.db.source import Source
+from dab.db.tasks import Task
 
 from dab import deb822
 
