@@ -6,8 +6,8 @@
 @copyright: 2016, Heysion Yuan <heysions@gmail.com>
 @license: GPLv3
 '''
-from tasks import Task as dbTask
-from source import Source as dbSource
+from models import Task as dbTask
+from models import Source as dbSource
 from dab.db import Base
 #from dab.db.dbconn import dbinit
 # from sqlalchemy.sql import text
