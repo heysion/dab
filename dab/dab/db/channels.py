@@ -19,8 +19,8 @@ class Channel(Base):
         db_table = "channelinfo"
     name = CharField(primary_key=True)
 
-    host_name = ForeignKeyField(Host,to_filed='name',db_column="host_name")
-    target_name = ForeignKeyField(Target,to_filed='name',db_column="target_name")
+    host_name = ForeignKeyField(Host,to_field='name',db_column="host_name")
+    target_name = ForeignKeyField(Target,to_field='name',db_column="target_name")
 
     arches = CharField()
     enabled = BooleanField()

@@ -11,8 +11,9 @@ import sys
 
 from peewee import *
 
-db = SqliteDatabase('dabdb.db')
+#db = SqliteDatabase('dabdb.db')
 
 class Base(Model):
     class Meta:
-        database = db
+        pass
+        #database = db

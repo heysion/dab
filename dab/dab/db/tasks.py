@@ -14,9 +14,11 @@ from peewee import ForeignKeyField
 from dab.db import Base
 from target import Target
 from package import Package
-from channel import Channel
+from channels import Channel
 from host import Host
-
+from source import Source
+from build import Build
+from users import User
 
 class Task(Base):
     class Meta:
@@ -35,17 +37,17 @@ class Task(Base):
     channel_name = ForeignKeyField(Channel,to_field='name',db_column="channel_name",null=True)
     host_name = ForeignKeyField(Host,to_field='name',db_column="hosts_name",null=True)
 
-    src_id = ForeignKeyField(Source,to_filed="id",db_column="src_id",null=True)
-    src_name = ForeignKeyField(Source,to_filed="name",db_column="src_name",null=True)
-    build_id = ForeignKeyField(Build,to_filed="id",db_column="build_id",null=True)
-    build_name = ForeignKeyField(Build,to_filed="name",db_column="build_name",null=True)
+    src_id = ForeignKeyField(Source,to_field="source_id",db_column="src_id",null=True)
+    src_name = ForeignKeyField(Source,to_field="name",db_column="src_name",null=True)
+    build_id = ForeignKeyField(Build,to_field="build_id",null=True)
+    build_name = ForeignKeyField(Build,to_field="name",db_column="build_name",null=True)
 
     parent = IntegerField(null=True)
     label = CharField(null=True)
     waiting = BooleanField(null=True)
     awaited = BooleanField(null=True)
-    owner = ForeignKeyField(User,to_filed="id",db_column="ower_id",null=True)
-    owner_name = ForeignKeyField(User,to_filed="name",db_column="ower_name",null=True)
+    owner = ForeignKeyField(User,to_field="id",db_column="ower_id",null=True)
+    owner_name = ForeignKeyField(User,to_field="name",db_column="ower_name",null=True)
     arch = CharField(32)
     priority = IntegerField(default=-1)
     

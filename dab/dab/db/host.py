@@ -16,9 +16,10 @@ from dab.util.error import DabdbError
 class Host(Base):
     class Meta:
         db_table = 'hostinfo'
-    user_id = ForeignKeyField(User, to_field='id',db_column="user_id")
-    name = CharField(primary_key=True, unique=True)
-    user_name = ForeignKeyField(User,to_field="name",db_column="user_name")
+    user_id = ForeignKeyField(User, to_field='id', db_column="user_id")
+    user_name = CharField()
+    #user_name = ForeignKeyField(User, to_field="name", db_column="user_name")
+    name = CharField(primary_key=True, unique=True, db_column="name")
     arches = CharField()
     capacity = IntegerField(null=True)
     description = CharField(null=True)

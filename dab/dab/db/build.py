@@ -7,7 +7,7 @@
 @license: GPLv3
 '''
 from peewee import CharField, BooleanField ,IntegerField
-from peewee import ForeignKeyField
+from peewee import ForeignKeyField, PrimaryKeyField
 
 from dab.db import Base
 from target import Target
@@ -16,6 +16,7 @@ from package import Package
 class Build(Base):
     class Meta:
         db_table = "debinfo"
+    build_id = PrimaryKeyField(db_column="build_id")
     target_name = ForeignKeyField(Target, to_field="name", db_column='target_name')
     package_name = ForeignKeyField(Package, to_field="name", db_column="package_name")
     name = CharField(unique=True)

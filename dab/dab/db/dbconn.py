@@ -1,8 +1,17 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import *
-from sqlalchemy.engine.url import URL
-from sqlalchemy.orm import sessionmaker
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+'''
+@date: 2016-08-30
+@author: Heysion Yuan
+@copyright: 2016, Heysion Yuan <heysions@gmail.com>
+@license: GPLv3
+'''
+
+# from sqlalchemy import create_engine
+# from sqlalchemy.orm import sessionmaker
+# from sqlalchemy import *
+# from sqlalchemy.engine.url import URL
+# from sqlalchemy.orm import sessionmaker
 
 class SQLBase(object):
     def __new__(cls,*args,**kw):

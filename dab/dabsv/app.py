@@ -8,7 +8,10 @@ import tornado.ioloop
 import psycopg2
 import psycopg2.pool
 
+from playhouse.pool import PooledSqliteDatabase
+
 from tornado.options import define ,options
+
 import urls as models
 
 define("port", default = 8080, help = "run on the given port", type = int)
@@ -19,8 +22,12 @@ define("db_user", default = "db_user", help = "community database user")
 define("db_password", default = "db_password", help = "community database password")
 minconn=4
 maxconn=16
+
+db_pool = PooledSqliteDataBase("dabdb.db",max_connections=10,state_timeout=600)
+
 class App(tornado.web.Application):
     def __init__(self):
+        db_pool_hander = db_pool
         settings = dict(
             debug = True,
             #xsrf_cookies = True,
