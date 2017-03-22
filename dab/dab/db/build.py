@@ -16,7 +16,7 @@ from package import Package
 class Build(Base):
     class Meta:
         db_table = "debinfo"
-    build_id = PrimaryKeyField(db_column="build_id")
+    #build_id = IntegerField(db_column="build_id",primary_key=True)
     target_name = ForeignKeyField(Target, to_field="name", db_column='target_name')
     package_name = ForeignKeyField(Package, to_field="name", db_column="package_name")
     name = CharField(unique=True)
