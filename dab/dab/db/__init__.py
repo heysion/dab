@@ -12,8 +12,17 @@ import sys
 from peewee import *
 
 #db = SqliteDatabase('dabdb.db')
+print("#FIXME")
+pysettings_path="/home/ndk/deepin-work/src-code-repo/deepin-auto-build/etc/settings.py"
+if os.path.exists(pysettings_path):
+    print "load "+os.path.basename(pysettings_path)+" found"
+    sys.path.append(os.path.dirname(pysettings_path))
+    from settings import EnvDabsv
 
 class Base(Model):
     class Meta:
-        pass
-        #database = db
+        if locals().has_key("EnvDabsv"):
+            database = EnvDabsv.getdatabase()
+
+
+

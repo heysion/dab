@@ -4,3 +4,4 @@ runenv
 dist
 deepin_auto_build.egg-info
 build
+*.zip
