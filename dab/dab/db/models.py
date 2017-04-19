@@ -255,6 +255,18 @@ class RepoCtl(Base):
         related_name="pkg_name_repoctl")
     version = CharField()
 
+class MkisoInfo(Base):
+    class Meta:
+        db_table = "mkisoinfo"
+    
+    isoname = CharField(unique=True)
+    create_time = DateTimeField(default=datetime.now())
+    update_time = DateTimeField(default=datetime.now())
+    preseed_config = CharField()
+    status = IntegerField(null=True)
+    includelist = CharField(null=True)
+    excludelist = CharField(null=True)
+
 def run_test():
     Target.create_table()
     tt = Target(name="abc",suite="abc",codename="a1")
