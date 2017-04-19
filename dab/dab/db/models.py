@@ -27,7 +27,7 @@ class User(Base):
     class Meta:
         db_table = 'userinfo'
     
-    user_id = PrimaryKeyField(unique=True,index=True,db_column="d")
+    uid = PrimaryKeyField(unique=True,index=True,db_column="uid")
     name = CharField(unique=True)
     password = CharField()
     ssalt = CharField()
@@ -129,10 +129,10 @@ class Host(Base):
     class Meta:
         db_table = 'hostinfo'
 
-    uid = ForeignKeyField(
+    ower = ForeignKeyField(
         User,
-        to_field='uid',
-        db_column="uid",
+        to_field="uid",
+        db_column="uid_user",
         related_name="uid_host")
     
     user_name = ForeignKeyField(
@@ -244,7 +244,7 @@ class RepoCtl(Base):
         Repo,
         to_field="name",
         db_column="repo_name",
-        related_name="repo_name_repoctl"
+        related_name="repo_name_repoctl",
         unique=True,
         index=True)
 
