@@ -117,7 +117,7 @@ class BuildDispatcher(DabDaemon):
         signal(SIGINT, lambda x, y: exit_flag.set())
         # siginterrupt(SIGINT, False)
 
-        print 'main {} started'.format(os.getpid())
+        #print 'main {} started'.format(os.getpid())
         proc = mp.Process(target=self.proxy_task_process, 
                           args=(task_cntl_queue, task_data_queue, exit_flag, task_pool))
         proc.start()

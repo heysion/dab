@@ -192,7 +192,7 @@ class Deb822Dict(object, UserDict.DictMixin):
             # Always return unicode objects instead of strings
             try:
                 value = value.decode(self.encoding)
-            except UnicodeDecodeError, e:
+            except UnicodeDecodeError as e:
                 # Evidently, the value wasn't encoded with the encoding the
                 # user specified.  Try detecting it.
                 warnings.warn('decoding from %s failed; attempting to detect '

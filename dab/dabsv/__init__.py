@@ -30,11 +30,11 @@ class HandlerBase(tornado.web.RequestHandler):
                     if not getattr(self, k, None) :
                         setattr(self, k, v)
                         print(k,v)
-            except ValueError, e:
+            except ValueError as e:
                 self.bl.no_error = False
-            except KeyError, e:
+            except KeyError as e:
                 self.bl.no_error = False
-            except AttributeError, e:
+            except AttributeError as e:
                 self.bl.no_error = False
             finally:
                 pass

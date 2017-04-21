@@ -59,11 +59,11 @@ class DabDaemon(Daemon):
             elif 'restart' in sys.argv:
                 self.restart()
             else:
-                print "Unknown command"
+                print("Unknown command")
                 sys.exit(2)
             sys.exit(0)
         else:
-            print "usage: %s start|stop|restart other config" % sys.argv[0]
+            print("usage: {} start|stop|restart other config".format(sys.argv[0]))
             sys.exit(2)
 
     def run(self,daemonconfig):

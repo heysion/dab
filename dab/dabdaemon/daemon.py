@@ -22,7 +22,7 @@ class Daemon(object):
     Usage: subclass the Daemon class and override the run() method
     """
     def __init__(self, app=None, pid=None, user=None,
-                 group=None,home_dir=None, umask=022, 
+                 group=None,home_dir=None, umask=022,
                  verbose=False,logger=None,foreground=False,options=None):
         if options is None:
             self.app = app
