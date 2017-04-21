@@ -23,6 +23,7 @@ class Base(Model):
     class Meta:
         if "EnvDabsv" in locals() :
             database = EnvDabsv.getdatabase()
-
+        # else:
+        #     database = get_database()
 
 
