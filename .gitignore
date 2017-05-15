@@ -1,6 +1,6 @@
 *.pyc
 *.db
-runenv
+env
 dist
 deepin_auto_build.egg-info
 build

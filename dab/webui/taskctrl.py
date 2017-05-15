@@ -6,7 +6,7 @@
 @copyright: 2017, Heysion Yuan <heysions@gmail.com>
 @license: GPLv3
 '''
-from dabweb import WebBase
+from dab.webui import WebBase
 
 class TaskList(WebBase):
     def prepare(self):

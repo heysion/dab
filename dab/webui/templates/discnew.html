@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block pageheader %}
+Deepin 镜像定制平台
+{% end %}
+
+{% block contextbody %}
+ <div class="row clearfix">
+    <div class="col-md-2 column">
+    </div>
+    <div class="col-md-8 column">
+      <form role="form" method="post">
+	<div class="form-group">
+	  <label for="isoname">镜像名字</label><input type="text" class="form-control" name="isoname" placeholder="deepin-server" required="required"/>
+	  <p class="help-block">
+	    镜像的名字,建议采用deepin-server+工程名字
+	  </p>
+
+	</div>
+	<div class="form-group">
+	  <label for="includelist">包含软件列表</label>
+	  <textarea  class="form-control" rows="3" name="includelist" placeholder="task-desktop;nginx"></textarea>
+	  <p class="help-block">
+	    包含软件列表，以';'符号分割
+	  </p>
+	</div>
+
+	<div class="form-group">
+	  <label for="excludelist">排除软件列表</label>
+	  <textarea class="form-control" name="excludelist" rows="3" placeholder="deepin-installer;live-boot"></textarea>
+	  <p class="help-block">
+	    排除软件列表，以';'符号分割
+	  </p>
+
+	</div>
+
+	<div class="form-group">
+	  <label for="preseedfile">Preseed文件</label><input type="file" name="preseedfile" />
+	  <p class="help-block">
+	    preseed 文件
+	  </p>
+	  <button type="submit" class="btn btn-default">提交</button>
+	</div>
+      </form>
+    </div>
+    <div class="col-md-2 column">
+    </div>
+  </div>
+{% end %}
