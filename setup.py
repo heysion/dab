@@ -12,7 +12,7 @@ version = '0.1'
 #     package_dir = {"":"dab"},
 # )
 
-setup(name='deepin-auto-discs',
+setup(name='deepin-auto-build',
       version=version,
       description="deepin auto build  platform",
       long_description="""build package & customer discs , manager repo
