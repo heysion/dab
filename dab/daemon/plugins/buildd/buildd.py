@@ -124,7 +124,7 @@ class BuildDispatcher(DabDaemon):
         proc_pid = proc.pid
         proc_pool[proc_pid] = proc
         update_counter()
-        print 'proxy {} started'.format(proc.pid)
+        #print 'proxy {} started'.format(proc.pid)
 
         while True:
             item = task_cntl_queue.get()
@@ -133,7 +133,7 @@ class BuildDispatcher(DabDaemon):
                 proc.start()
                 proc_pool[proc.pid] = proc
                 update_counter()
-                print 'worker {} started'.format(proc.pid)
+                # print 'worker {} started'.format(proc.pid)
             elif item['event'] == 'exit':
                 proc = proc_pool.pop(item['pid'])
                 task_id = task_pool.keys()[task_pool.values().index(item['pid'])]
@@ -141,13 +141,14 @@ class BuildDispatcher(DabDaemon):
                     task_pool.pop(task_id)
                 reduce_counter()
                 proc.join()
-                print 'child {} stopped'.format(item['pid'])
+                # print 'child {} stopped'.format(item['pid'])
             else:
-                print 'It\'s impossible !'
-
+                pass
+                # print 'It\'s impossible !'
+                
             if not proc_pool: 
                 break
-        print 'main {} stopped'.format(os.getpid())
+        #print 'main {} stopped'.format(os.getpid())
 
 if __name__ == "__main__":
     app = BuildDispatcher()

@@ -4,7 +4,7 @@ import pdb
 
 class DABBuild():
     def all(self):
-        print "build all package"
+        #print "build all package"
         pass
 
     def update_src_changelog(self,bp):
@@ -12,7 +12,7 @@ class DABBuild():
         pass
     
     def package(self,bp):
-        print "build package"
+        #print "build package"
         '''debuild -e USE_GGCGO=1 -e CGO_ENABLED=1 -us -uc -sa -j8'''
         pass
 
@@ -25,7 +25,7 @@ class BuildPackage():
         self.bp = self._session.query(Package).filter(Package.package_name == name).one()
     
     def update_ver(self):
-        print "update db version"
+        #print "update db version"
         self.bp.package_build_freq  = self.bp.package_build_freq if self.bp.package_build_freq else 0+ 1
         pass
 

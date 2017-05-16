@@ -43,7 +43,8 @@ def run_main(argv):
         options = parse_options(sys.argv[1:])
         cli = DABCli(options)
         cli.run()
-    except Usage as (msg, no_error):
+    except Usage as status :
+        (msg, no_error) = status
         if no_error:
             out = sys.stdout
             ret = 0

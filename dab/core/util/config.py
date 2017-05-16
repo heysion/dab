@@ -157,7 +157,7 @@ class DabsvConfig(object):
 
 if __name__ == "__main__":
     opt = DaemonConfig()
-    print sys.argv
+    #print sys.argv
     opt.update_options(sys.argv[1:])
     print(opt.__dict__)
 

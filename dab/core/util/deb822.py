@@ -617,7 +617,7 @@ class Deb822(Deb822Dict):
         # _gpg_multivalued.__init__) which is small compared to Packages or
         # Sources which contain no signature
         if not hasattr(self, 'raw_text'):
-            raise ValueError, "original text cannot be found"
+            raise ValueError("original text cannot be found")
 
         if self.gpg_info is None:
             self.gpg_info = GpgInfo.from_sequence(self.raw_text,
@@ -734,7 +734,7 @@ class GpgInfo(dict):
             args.extend(["--keyring", k])
         
         if "--keyring" not in args:
-            raise IOError, "cannot access any of the given keyrings"
+            raise IOError("cannot access any of the given keyrings")
 
         p = subprocess.Popen(args, stdin=subprocess.PIPE,
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
