@@ -3,4 +3,5 @@ tornado
 #pyuv
 psycopg2
 requests
+peewee
 #yaml apt-get install python-yaml

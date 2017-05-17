@@ -11,7 +11,7 @@ from datetime import datetime
 from peewee import CharField, BooleanField ,IntegerField, DateTimeField
 from peewee import ForeignKeyField, PrimaryKeyField
 
-from dab.db import Base
+from dab.core.db import Base
 
 class User(Base):
     """
@@ -55,7 +55,7 @@ class Package(Base):
         to_field='name',
         db_column="target_name")
 
-    name = CharField() 
+    name = CharField(unique=True,index=True) 
     enabled = BooleanField()
 
 
@@ -87,7 +87,7 @@ class Source(Base):
         db_column="package_name",
         related_name="pkg_name_source")
 
-    name = CharField()
+    name = CharField(unique=True)
 
     version = CharField()
     epoch = IntegerField(null=True)
