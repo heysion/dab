@@ -16,17 +16,16 @@ python manager.py --initdb
 
 ```
 git clone https://github.com/heysion/deepin-auto-build.git
-cd deepin-auto-build
-git checkout heysion@v2
+cd deepin-auto-build 
 virtualenv -p python3 env
 source  env/bin/activate
 python setup.py install
-cd -
+cd dab/webui
 pip install -r requirements.txt
 python app.py
 ```
 
 ## test
 
-chrome http://127.0.0.1:8000/newtask
+chrome http://127.0.0.1:8000/taskindex
 
