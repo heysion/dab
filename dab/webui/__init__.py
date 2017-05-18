@@ -10,6 +10,15 @@ import tornado.web
 
 class WebBase(tornado.web.RequestHandler):
     pass
+
+class NotFound(WebBase):
+    def get(self):
+        self.render("404.html")
+        #self.set_status(404)
+
+    def post(self):
+        self.render("404.html")
+
     # def ret_404_msg(self,msg):
     #     ret_data = {'retcode': 404, 'retmsg': msg}
     #     return yaml.dump(ret_data)

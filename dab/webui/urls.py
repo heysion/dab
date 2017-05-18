@@ -9,30 +9,30 @@
 
 from taskctrl import TaskIndex , TaskInfo
 from disctrl import DiscIndex, DiscNew, DiscInfo, DiscList
+from dab.webui import NotFound
 #from taskctrl2 import TaskNew2
 from pubctrl import PubIndex
 
+# /targetindex
+# /pkgindex
+# /build-src-index
+# /taskindex
+# /discindex
+# /repoindex
+# /chlindex
+# /usrindex
+
 views = [
+    (r'/targetindex', NotFound),
+    (r'/pkgindex', NotFound),
+    (r'/build-src-index', NotFound),
     (r'/taskindex', TaskIndex),
+    (r'/discindex', DiscIndex),
+    (r'/repoindex', NotFound),
+    (r'/chlindex', NotFound),
+    (r'/usrindex', NotFound),
     (r'/task', TaskIndex),
     (r'/task/([0-9]+)', TaskInfo),
     (r'/discindex', DiscIndex),
     (r'/disc', DiscIndex),
-    # (r'/pub)', PubIndex),
-#    (r'/task/list', TaskListHandler),
-#    (r'/task/([0-9]+)/info', TaskInfoHandler), # /task/<id>/info
-#    (r'/task/([0-9]+)/result', TaskResultHandler), # /task/<id>/result
-#    (r'/task/([0-9]+)/delete', TaskDelHandler), # /task/<id>/delete
 ]
-
-# views = [
-#     (r'/newtask', TaskNew),
-#     (r'/newtask2', TaskNew2),
-#     (r'/task/list', TaskList),
-#     (r'/task/([0-9]+)', TaskInfo),
-#     (r'/pub', PubIndex),
-#     (r'/task/list', TaskListHandler),
-#     (r'/task/([0-9]+)/info', TaskInfoHandler), # /task/<id>/info
-#     (r'/task/([0-9]+)/result', TaskResultHandler), # /task/<id>/result
-#     (r'/task/([0-9]+)/delete', TaskDelHandler), # /task/<id>/delete
-# ]

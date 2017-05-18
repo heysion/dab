@@ -29,7 +29,7 @@ from dab import settings
 
 class DiscIndex(WebBase):
     def get(self):
-        pass
+        self.render("discindex.html")
 
 class DiscNew(WebBase):
     _thread_pool = ThreadPoolExecutor(5)
