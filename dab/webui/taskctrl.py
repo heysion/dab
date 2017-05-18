@@ -8,7 +8,7 @@
 '''
 from dab.webui import WebBase
 
-class TaskList(WebBase):
+class TaskIndex(WebBase):
     def prepare(self):
         pass
     def on_finish(self):

@@ -34,7 +34,7 @@ class App(tornado.web.Application):
 def run_server():
     tornado.options.parse_command_line()
     http_server = tornado.httpserver.HTTPServer(App())
-    http_server.listen(options.port)
+    http_server.listen(options.port,"127.0.0.1")
     tornado.ioloop.IOLoop.instance().start()
     pass
 

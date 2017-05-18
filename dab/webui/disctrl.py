@@ -16,19 +16,20 @@ import functools
 import tornado.gen
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
-from peewee import SqliteDatabase
+#from peewee import SqliteDatabase
 
 from dab.webui import WebBase
 from dab.core.db.models import MkisoInfo
 from dab import settings
 
 #FIXME
-print("#FIXME")
-db = SqliteDatabase("../peewee.db")
-MkisoInfo._meta.database = db
+# print("#FIXME")
+# db = SqliteDatabase("../peewee.db")
+# MkisoInfo._meta.database = db
 
 class DiscIndex(WebBase):
-    pass
+    def get(self):
+        pass
 
 class DiscNew(WebBase):
     _thread_pool = ThreadPoolExecutor(5)

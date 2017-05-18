@@ -7,16 +7,18 @@
 @license: GPLv3
 '''
 
-from taskctrl import TaskList , TaskInfo
+from taskctrl import TaskIndex , TaskInfo
 from disctrl import DiscIndex, DiscNew, DiscInfo, DiscList
-from taskctrl2 import TaskNew2
+#from taskctrl2 import TaskNew2
 from pubctrl import PubIndex
 
 views = [
+    (r'/taskindex', TaskIndex),
     (r'/task', TaskIndex),
     (r'/task/([0-9]+)', TaskInfo),
-    (r'/disc)', DiscIndex),
-    (r'/pub)', PubIndex),
+    (r'/discindex', DiscIndex),
+    (r'/disc', DiscIndex),
+    # (r'/pub)', PubIndex),
 #    (r'/task/list', TaskListHandler),
 #    (r'/task/([0-9]+)/info', TaskInfoHandler), # /task/<id>/info
 #    (r'/task/([0-9]+)/result', TaskResultHandler), # /task/<id>/result
