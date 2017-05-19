@@ -14,15 +14,6 @@ from dab.webui import NotFound
 #from taskctrl2 import TaskNew2
 from pubctrl import PubIndex
 
-# /targetindex
-# /pkgindex
-# /build-src-index
-# /taskindex
-# /discindex
-# /repoindex
-# /chlindex
-# /usrindex
-
 views = [
     (r'/', NotFound),
     (r'/targetindex', TargetIndex),
