@@ -7,7 +7,7 @@ import tornado.web
 import tornado.ioloop
 
 from tornado.options import define ,options
-
+from peewee import PostgresqlDatabase
 import urls as models
 
 define("port", default = 8090, help = "run on the given port", type = int)
@@ -27,9 +27,21 @@ web_settings=dict(
 
 web_views = models.views
 
+from dab.core.db import models
+from dab.core.db import database_proxy
+database = PostgresqlDatabase(
+    'dabdb',  # Required by Peewee.
+    user='postgres',  # Will be passed directly to psycopg2.
+    password='qwe123',  # Ditto.
+    host='192.168.122.10',  # Ditto.
+)
+
+database_proxy.initialize(database)
+
 class App(tornado.web.Application):
     def __init__(self):
         tornado.web.Application.__init__(self,web_views,**web_settings)
+        self.database = database.get_conn()
 
 def run_server():
     tornado.options.parse_command_line()
