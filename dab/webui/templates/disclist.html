@@ -12,26 +12,26 @@
     </tr>
   </thead>
   <tbody>
-    {% for taskinfo in tasklist %}
+    {% for discinfo in discslist %}
     <tr >
       <td>
-	{{ taskinfo["id"] }}
+	{{ discinfo["id"] }}
       </td>
       <td>
-	{{ taskinfo["name"] }}
+	{{ discinfo["name"] }}
       </td>
       <td>
-	{{ taskinfo["createtime"] }}
+	{{ discinfo["createtime"] }}
       </td>
       <td>
-	<div  {% if taskinfo["state"] is not 'success' %} class="progress active progress-striped " {% else %} class="progress active" {% end %}>
+	<div  {% if discinfo["state"] is not 'success' %} class="progress active progress-striped " {% else %} class="progress active" {% end %}>
 	  <div class="progress-bar progress-bar-success"
 	       aria-valuemin="0" aria-valuemax="100" style="width: 90%">
 	  </div>
 	</div>
       </td>
       <td>
-	{{ taskinfo["state"] }}
+	{{ discinfo["state"] }}
       </td>
     </tr>
     {% end %}
