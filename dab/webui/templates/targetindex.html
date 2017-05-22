@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block pageheader %}
+Deepin 目标列表
+{% end %}
+
+{% block optionsbody %}
+<div class="row clearfix">
+  <div class="col-md-10 column">
+    <div class="span4 offset4"><a href="/targetnew">New</a></div>
+</div>
+{% end %}
+
+
+{% block contextbody %}
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>目标</th><th>suite</th><th>codename</th><th>架构</th><th>工作路径</th><th>备注</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for targetinfo in targetlist %}
+    <tr >
+      <td>
+	{{ targetinfo["name"] }}
+      </td>
+      <td>
+	{{ targetinfo["suite"] }}
+      </td>
+      <td>
+	{{ targetinfo["codename"] }}
+      </td>
+      <td>
+	{{ targetinfo["arches"] }}
+      </td>
+      <td>
+	{{ targetinfo["workbase"] }}
+      </td>
+      <td>
+	{{ targetinfo["description"] }}
+      </td>
+    </tr>
+    {% end %}
+  </tbody>
+</table>
+{% end %}
