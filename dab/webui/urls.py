@@ -10,6 +10,7 @@
 from taskctrl import TaskIndex , TaskInfo
 from disctrl import DiscIndex, DiscNew, DiscInfo, DiscList
 from targetctrl import TargetIndex, TargetNew
+from pkgctrl import PkgIndex, PkgNew
 from dab.webui import NotFound
 #from taskctrl2 import TaskNew2
 from pubctrl import PubIndex
@@ -18,7 +19,8 @@ views = [
     (r'/', NotFound),
     (r'/targetindex', TargetIndex),
     (r'/targetnew', TargetNew),
-    (r'/pkgindex', NotFound),
+    (r'/pkgindex', PkgIndex),
+    (r'/pkgnew', PkgNew),
     (r'/build-src-index', NotFound),
     (r'/taskindex', TaskIndex),
     (r'/discindex', DiscIndex),

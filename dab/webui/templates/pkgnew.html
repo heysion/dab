@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block pageheader %}
+Deepin 项目列表
+{% end %}
+
+{% block contextbody %}
+ <div class="row clearfix">
+    <div class="col-md-2 column">
+    </div>
+    <div class="col-md-8 column">
+      <form role="form" method="post">
+	<div class="form-group">
+	  <label for="target_name"></label><input type="text" class="form-control" name="target_name" placeholder="deepin-server" required="required"/>
+	  <label for="name">项目名称</label><input type="text" class="form-control" name="name" placeholder="deepin-server" required="required"/>
+	  <label for="enabled">是否启用</label><input type="text" class="form-control" name="enabled" placeholder="deepin-server" />
+	</div>
+	  <button type="submit" class="btn btn-default">提交</button>
+      </form>
+    </div>
+    <div class="col-md-2 column">
+    </div>
+  </div>
+{% end %}

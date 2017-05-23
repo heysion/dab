@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block pageheader %}
+Deepin 项目列表
+{% end %}
+
+{% block optionsbody %}
+<div class="row clearfix">
+  <div class="col-md-10 column">
+    <div class="span4 offset4"><a href="/pkgnew">New</a></div>
+</div>
+{% end %}
+
+
+{% block contextbody %}
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>名字</th><th>目标</th><th>是否启用</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for datainfo in datalist %}
+    <tr >
+      <td>
+	{{ datainfo["name"] }}
+      </td>
+      <td>
+	{{ datainfo["target_name"] }}
+      </td>
+      <td>
+	{{ datainfo["enabled"] }}
+      </td>
+    </tr>
+    {% end %}
+  </tbody>
+</table>
+{% end %}
