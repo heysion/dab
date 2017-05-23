@@ -25,7 +25,30 @@ from dab import settings
 
 class TargetIndex(WebBase):
     def get(self):
-        self.render("targetindex.html",targetlist=[])
+
+        dataset = self.get_target_top_all()
+
+        self.render("targetindex.html",targetlist=dataset)
+
+    def get_target_top_all(self):
+        dataset = Target.select(Target.name,Target.suite,
+                                  Target.codename, Target.architectures,
+                                  Target.workdir, Target.description)
+        datalist = []
+        if dataset :
+            for data in dataset:
+                datalist.append({"name":data.name, "suite":data.suite,
+                                 "codename":data.codename, "arches":data.architectures,
+                                 "workbase":data.workdir, "description":data.description})
+
+        return datalist
+
+    # def get_task_for_name(self,name):
+    #     task = MkisoInfo.select(MkisoInfo.isoname).where(MkisoInfo.isoname==name)
+    #     if not task :
+    #         pass
+    #     return task
+
 
 class TargetNew(WebBase):
     _thread_pool = ThreadPoolExecutor(5)

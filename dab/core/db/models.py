@@ -41,7 +41,7 @@ class Target(Base):
 
     name = CharField(primary_key=True)
     suite = CharField(32)
-    codename = CharField(32, unique=True)
+    codename = CharField(32)
     architectures = CharField(null=True)
     workdir = CharField(null=True)
     description = CharField(null=True)
