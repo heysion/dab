@@ -87,7 +87,7 @@ class Source(Base):
         db_column="package_name",
         related_name="pkg_name_source")
 
-    name = CharField(unique=True)
+    name = CharField()
 
     version = CharField()
     epoch = IntegerField(null=True)
