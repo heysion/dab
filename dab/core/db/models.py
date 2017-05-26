@@ -9,7 +9,7 @@
 from datetime import datetime
 
 from peewee import CharField, BooleanField ,IntegerField, DateTimeField
-from peewee import ForeignKeyField, PrimaryKeyField
+from peewee import ForeignKeyField, PrimaryKeyField, CompositeKey
 
 from dab.core.db import Base
 
@@ -55,7 +55,7 @@ class Package(Base):
         to_field='name',
         db_column="target_name")
 
-    name = CharField(unique=True,index=True) 
+    name = CharField(index=True,unique=True) 
     enabled = BooleanField()
 
 
@@ -67,14 +67,15 @@ class Depends(Base):
         Package,
         to_field="name",
         related_name="pkg_name_depends",
-        db_column="pkg_name")
-    dep_name = CharField(null=False)
+        db_column="pkg_name",
+        null=True)
+    dep_name = CharField()
 
 class Source(Base):
     class Meta:
         db_table = "dscinfo"
 
-    sid = PrimaryKeyField(unique=True,index=True,db_column="sid")
+    sid = PrimaryKeyField(unique=True,db_column="sid")
     target_name = ForeignKeyField(
         Target,
         to_field="name",
@@ -85,9 +86,10 @@ class Source(Base):
         Package,
         to_field="name",
         db_column="package_name",
-        related_name="pkg_name_source")
+        related_name="pkg_name_source",
+        null=True)
 
-    name = CharField()
+    name = CharField(index=True)
 
     version = CharField()
     epoch = IntegerField(null=True)
@@ -100,6 +102,7 @@ class Source(Base):
 class Build(Base):
     class Meta:
         db_table = "debinfo"
+        #primary_key = CompositeKey("bid","target_name","name")
 
     bid = PrimaryKeyField(unique=True,index=True,db_column="bid")
     target_name = ForeignKeyField(
@@ -112,9 +115,10 @@ class Build(Base):
         Package,
         to_field="name",
         db_column="package_name",
-        related_name="pkg_name_build")
+        related_name="pkg_name_build",
+        null=True)
 
-    name = CharField(unique=True)
+    name = CharField()
 
     arches = CharField()
     version = CharField()
@@ -189,18 +193,20 @@ class Task(Base):
         to_field="sid",
         related_name="sid_task",
         db_column="sid",
-        null=True)
+        unique=True)
     src_name = ForeignKeyField(
         Source,
         to_field="name",
         db_column="src_name",
         related_name="src_name_task",
         null=True)
+
     build_id = ForeignKeyField(
         Build,
         to_field="bid",
+        db_column="bid",
         related_name="bid_task",
-        null=True)
+        unique=True)
     build_name = ForeignKeyField(
         Build,
         to_field="name",
@@ -217,7 +223,7 @@ class Task(Base):
         to_field="uid",
         related_name="uid_task",
         db_column="ower_id",
-        null=True)
+        unique=True)
     owner_name = ForeignKeyField(
         User,
         to_field="name",
@@ -252,7 +258,8 @@ class RepoCtl(Base):
         Package,
         to_field="name",
         db_column="pkg_name",
-        related_name="pkg_name_repoctl")
+        related_name="pkg_name_repoctl",
+        null=True)
     version = CharField()
 
 class MkisoInfo(Base):
