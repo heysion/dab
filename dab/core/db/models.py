@@ -194,11 +194,9 @@ class Task(Base):
         related_name="sid_task",
         db_column="sid",
         unique=True)
-    src_name = ForeignKeyField(
-        Source,
-        to_field="name",
+    src_name = CharField(
+#        to_field="name",
         db_column="src_name",
-        related_name="src_name_task",
         null=True)
 
     build_id = ForeignKeyField(
@@ -207,11 +205,9 @@ class Task(Base):
         db_column="bid",
         related_name="bid_task",
         unique=True)
-    build_name = ForeignKeyField(
-        Build,
-        to_field="name",
+    build_name = CharField(
+ #       to_field="name",
         db_column="build_name",
-        related_name="build_name_task",
         null=True)
 
     parent = IntegerField(null=True)
