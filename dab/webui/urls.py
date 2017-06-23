@@ -7,7 +7,7 @@
 @license: GPLv3
 '''
 
-from taskctrl import TaskIndex , TaskInfo
+from taskctrl import TaskIndex, TaskInfo, TaskNew
 from disctrl import DiscIndex, DiscNew, DiscInfo, DiscList
 from targetctrl import TargetIndex, TargetNew
 from pkgctrl import PkgIndex, PkgNew
@@ -30,6 +30,7 @@ views = [
     (r'/chlindex', NotFound),
     (r'/usrindex', NotFound),
     (r'/task', TaskIndex),
+    (r'/tasknew', TaskNew),
     (r'/task/([0-9]+)', TaskInfo),
     (r'/discindex', DiscIndex),
     (r'/disc', DiscIndex),

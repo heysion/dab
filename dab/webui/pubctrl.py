@@ -24,9 +24,9 @@ from dab.core.db.models import MkisoInfo
 from dab import settings
 
 #FIXME
-print("#FIXME")
-db = SqliteDatabase("../peewee.db")
-MkisoInfo._meta.database = db
+#print("#FIXME")
+# db = SqliteDatabase("../peewee.db")
+# MkisoInfo._meta.database = db
 
 class PubIndex(WebBase):
     def get(self):
