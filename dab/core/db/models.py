@@ -182,6 +182,13 @@ class Task(Base):
         related_name="chnl_name_task",
         null=True)
 
+    target_name = ForeignKeyField(
+        Target,
+        to_field='name',
+        db_column="target_name",
+        related_name="tag_name_task",
+        null=True)
+
     host_name = ForeignKeyField(
         Host,
         to_field='name',
@@ -193,7 +200,7 @@ class Task(Base):
         to_field="sid",
         related_name="sid_task",
         db_column="sid",
-        unique=True)
+        null=True)
     src_name = CharField(
 #        to_field="name",
         db_column="src_name",
@@ -204,7 +211,7 @@ class Task(Base):
         to_field="bid",
         db_column="bid",
         related_name="bid_task",
-        unique=True)
+        null=True)
     build_name = CharField(
  #       to_field="name",
         db_column="build_name",
@@ -218,8 +225,8 @@ class Task(Base):
         User,
         to_field="uid",
         related_name="uid_task",
-        db_column="ower_id",
-        unique=True)
+        db_column="ower_id")
+#        unique=True)
     owner_name = ForeignKeyField(
         User,
         to_field="name",
