@@ -40,7 +40,7 @@ class Target(Base):
         db_table = 'targetinfo'
 
     name = CharField(primary_key=True)
-    suite = CharField(32)
+    suite = CharField(32,null=True)
     codename = CharField(32)
     architectures = CharField(null=True)
     workdir = CharField(null=True)
@@ -57,7 +57,7 @@ class Package(Base):
 
     name = CharField(index=True,unique=True) 
     enabled = BooleanField()
-
+    workdir = CharField(null=True)
 
 class Depends(Base):
     class Meta:
@@ -71,151 +71,38 @@ class Depends(Base):
         null=True)
     dep_name = CharField()
 
-class Source(Base):
-    class Meta:
-        db_table = "dscinfo"
-
-    sid = PrimaryKeyField(unique=True,db_column="sid")
-    target_name = ForeignKeyField(
-        Target,
-        to_field="name",
-        db_column='target_name',
-        related_name="target_name_source")
-
-    package_name = ForeignKeyField(
-        Package,
-        to_field="name",
-        db_column="package_name",
-        related_name="pkg_name_source",
-        null=True)
-
-    name = CharField(index=True)
-
-    version = CharField()
-    epoch = IntegerField(null=True)
-    dsc_file = CharField()
-    sha1sum = CharField(null=True)
-    md5sum = CharField(64, null=True)
-    filesize = IntegerField(null=True)
-    description = CharField(null=True)
-
-class Build(Base):
-    class Meta:
-        db_table = "debinfo"
-        #primary_key = CompositeKey("bid","target_name","name")
-
-    bid = PrimaryKeyField(unique=True,index=True,db_column="bid")
-    target_name = ForeignKeyField(
-        Target,
-        to_field="name",
-        db_column='target_name',
-        related_name="target_name_build")
-
-    package_name = ForeignKeyField(
-        Package,
-        to_field="name",
-        db_column="package_name",
-        related_name="pkg_name_build",
-        null=True)
-
-    name = CharField()
-
-    arches = CharField()
-    version = CharField()
-    epoch = IntegerField(null=True)
-    chs_file = CharField()
-    sha1sum = CharField(128, null=True)
-    md5sum = CharField(64, null=True)
-    filesize = IntegerField(null=True)
-    description = CharField(null=True)
-
-class Host(Base):
-    class Meta:
-        db_table = 'hostinfo'
-
-    ower = ForeignKeyField(
-        User,
-        to_field="uid",
-        db_column="uid_user",
-        related_name="uid_host")
-    
-    user_name = ForeignKeyField(
-        User,
-        to_field="name",
-        db_column="user_name",
-        related_name="uname_host")
-    name = CharField(primary_key=True, unique=True, db_column="name")
-    arches = CharField()
-    capacity = IntegerField(null=True)
-    description = CharField(null=True)
-    comment = CharField(null=True)
-    ready = BooleanField()
-    enabled = BooleanField()
-
-class Channel(Base):
-    class Meta:
-        db_table = "channelinfo"
-    name = CharField(primary_key=True)
-
-    host_name = ForeignKeyField(Host,to_field='name',db_column="host_name")
-    target_name = ForeignKeyField(Target,to_field='name',db_column="target_name")
-
-    arches = CharField()
-    enabled = BooleanField()
-    max_job = IntegerField()
-    curr_job = IntegerField()
-
 class Task(Base):
     class Meta:
         db_table = "taskinfo"
 
     """0 init 100 submit 200 start 300 build  400 failed 500 success """
+    build_id = IntegerField(unique=True)
     state = IntegerField(default=0)
     create_time = DateTimeField(default=datetime.now())
     start_time = DateTimeField(null=True)
     completion_time = DateTimeField(null=True)
 
-    channel_name = ForeignKeyField(
-        Channel,
-        to_field='name',
-        db_column="channel_name",
-        related_name="chnl_name_task",
-        null=True)
-
     target_name = ForeignKeyField(
         Target,
         to_field='name',
         db_column="target_name",
-        related_name="tag_name_task",
-        null=True)
+        related_name="tag_name_task")
 
-    host_name = ForeignKeyField(
-        Host,
-        to_field='name',
-        db_column="hosts_name",
-        related_name="host_name_task",null=True)
+    pkg_name = ForeignKeyField(
+        Package,
+        to_field="name",
+        related_name="pkg_name_task",
+        db_column="pkg_name")
 
-    src_id = ForeignKeyField(
-        Source,
-        to_field="sid",
-        related_name="sid_task",
-        db_column="sid",
-        null=True)
-    src_name = CharField(
-#        to_field="name",
-        db_column="src_name",
-        null=True)
-
-    build_id = ForeignKeyField(
-        Build,
-        to_field="bid",
-        db_column="bid",
-        related_name="bid_task",
-        null=True)
-    build_name = CharField(
- #       to_field="name",
-        db_column="build_name",
-        null=True)
+    dsc_file = CharField(null=True)
+    version = CharField(null=True)
+    epoch = IntegerField(null=True)
+    arch = CharField(32,null=True)
+    chs_file = CharField(null=True)
+    sha1sum = CharField(128, null=True)
+    md5sum = CharField(64, null=True)
+    filesize = IntegerField(null=True)
+    description = CharField(null=True)
 
     parent = IntegerField(null=True)
     label = CharField(null=True)
@@ -226,15 +113,15 @@ class Task(Base):
         to_field="uid",
         related_name="uid_task",
         db_column="ower_id")
-#        unique=True)
+
     owner_name = ForeignKeyField(
         User,
         to_field="name",
         db_column="ower_name",
         related_name="user_name_task",
         null=True)
-    arch = CharField(32)
     priority = IntegerField(default=-1)
+    cycle_count = IntegerField(default=0)
 
 class Repo(Base):
     class Meta:
