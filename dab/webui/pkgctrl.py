@@ -40,32 +40,19 @@ class PkgIndex(WebBase):
         return datalist
 
 class PkgNew(WebBase):
-    _thread_pool = ThreadPoolExecutor(5)
-    def prepare(self):
-        pass
-    def on_finish(self):
-        super(PkgNew, self).on_finish()
-
     def get(self):
         self.render("pkgnew.html")
         pass
     
-    # @tornado.web.asynchronous
-    # @tornado.gen.coroutine
     def post(self):
         req_data = { k: self.get_argument(k) for k in self.request.arguments }
         if not ("name" in req_data.keys()):
             self.render("404.html")
         if not ("target_name" in req_data  and req_data["target_name"] is not None) :
             self.render("404.html")
-        #tornado.ioloop.IOLoop.instance().add_callback(functools.partial(self.save_new_target,req_data))
         self.save_new_instance(req_data)
-        # print(req_data)
-        # self.write(req_data)
-        # self.write(self.request.body)
-        self.render("pkgindex.html",datalist=[])
+        self.redirect("/pkgindex")
 
-    #@tornado.concurrent.run_on_executor(executor='_thread_pool')
     def save_new_instance(self,data):
         new_instance = Package.select(Package.name).where(Package.name==data["name"] and Package.target_name==data["target_name"])
         if not new_instance :

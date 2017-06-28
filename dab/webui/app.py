@@ -11,6 +11,7 @@ from peewee import PostgresqlDatabase
 import urls as models
 
 define("port", default = 8090, help = "run on the given port", type = int)
+define("sv_host", default = "0.0.0.0", help = "community database host")
 define("db_host", default = "db_host", help = "community database host")
 define("db_database", default = "db_name", help = "community database name")
 define("db_port", default = 5432, help = "db port", type = int)
@@ -46,7 +47,7 @@ class App(tornado.web.Application):
 def run_server():
     tornado.options.parse_command_line()
     http_server = tornado.httpserver.HTTPServer(App())
-    http_server.listen(options.port,"127.0.0.1")
+    http_server.listen(options.port,options.sv_host)
     tornado.ioloop.IOLoop.instance().start()
     pass
 

@@ -8,12 +8,13 @@
 '''
 
 from taskctrl import TaskIndex, TaskInfo, TaskNew
+from taskapi import TaskAPI
+from mtaskapi import mTaskAPI
 from disctrl import DiscIndex, DiscNew, DiscInfo, DiscList
 from targetctrl import TargetIndex, TargetNew
 from pkgctrl import PkgIndex, PkgNew
 from buildctrl import BuildIndex, BuildNew
 from dab.webui import NotFound
-#from taskctrl2 import TaskNew2
 from pubctrl import PubIndex
 
 views = [
@@ -34,4 +35,6 @@ views = [
     (r'/task/([0-9]+)', TaskInfo),
     (r'/discindex', DiscIndex),
     (r'/disc', DiscIndex),
+    (r'/api/v1/task', TaskAPI),
+    (r'/api/v0.1/task', mTaskAPI),
 ]

@@ -1,0 +1,111 @@
+# get task
+## request
+{
+    taskid:"1",
+    target:"deepin-mips64el",
+    pkgname:"deepin-auto-build",
+    dscfile:"http://10.2.3.20/work/deepin-auto-build_0.1.dsc",
+    version:"0.1",
+    epoch:"",
+    arch:"mips64el",
+    parent:"",
+    ower_name:"admin"
+}
+
+## response
+{
+    retcode:0,
+    retmsg:"OK"
+    data:[{
+    taskid:"1"
+    target:"deepin-mips64el",
+    pkgname:"deepin-auto-build",
+    dscfile:"http://10.2.3.20/work/deepin-auto-build_0.1.dsc",
+    version:"0.1",
+    epoch:"",
+    arch:"mips64el",
+    description:"",
+    parent:"",
+    ower_name:"admin"
+    },
+    {
+    taskid:"2"
+    target:"deepin-mips64el",
+    pkgname:"deepin-auto-build",
+    dscfile:"http://10.2.3.20/work/deepin-auto-build_0.1.dsc",
+    version:"0.1",
+    epoch:"",
+    arch:"mips64el",
+    description:"",
+    parent:"",
+    ower_name:"admin"
+    }]
+}
+
+
+# new task
+## request
+{
+    buildid:100,
+    target:"deepin-mips64el",
+    pkgname:"deepin-auto-build",
+    dscfile:"http://10.2.3.20/work/deepin-auto-build_0.1.dsc",
+    version:"0.1",
+    epoch:"",
+    arch:"mips64el",
+    description:"",
+    parent:"",
+    ower_name:"admin"
+}
+
+## response
+{
+    retcode:0,
+    retmsg:"OK"
+    data:[{
+    buildid:1
+    target:"deepin-mips64el",
+    pkgname:"deepin-auto-build",
+    dscfile:"http://10.2.3.20/work/deepin-auto-build_0.1.dsc",
+    version:"0.1",
+    epoch:"",
+    arch:"mips64el",
+    description:"",
+    parent:"",
+    ower_name:"admin"
+    }]
+}
+
+# update task
+# request
+{
+    buildid:2,
+    target:"deepin-mips64el",
+    pkgname:"deepin-auto-build",
+    dscfile:"http://10.2.3.20/work/deepin-auto-build_0.1.dsc",
+    arch:"mips64el",
+    ower_name:"admin",
+    starttime:"2017-06-26 10:11",
+    completiontime:"2017-06-26 10:11",
+    chsfile:"/var/mips64el/deepin-auto-build_0.1_mips64el.changes",
+    state:"500",
+    sha1sum:"aksdjflakjfdlkadsjflkajdsfk",
+    md5sum:"adslkjalksdjfalkdsflkkjasdlkjf",
+    filesize:1000
+
+}
+
+## response
+{
+    retcode:0,
+    retmsg:"OK"
+    data:[{
+    buildid:"1"
+    target:"deepin-mips64el",
+    pkgname:"deepin-auto-build"
+}
+
+	  curl -v http://127.0.0.1:8090/api/v0.1/task -X POST \
+	  -d "arch"="mips64el" \
+	  -d "pkgname"="dab" \
+	  -d "target"="test"
